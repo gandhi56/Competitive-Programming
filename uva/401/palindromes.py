@@ -1,3 +1,36 @@
+# /* UVa problem: 401
+#  * Topic: String processing
+#  *
+#  * Level: easy
+#  * 
+#  * Brief problem description: 
+#  *	Given the reversed letter for a subset of every capital letter and the
+# 		numbers 1 - 9, for each string s provided in input:
+# 			- determine if s is a palindrome
+# 			- if every s[i] has a defined reverse and reverse(s) = s_,
+# 				where s_ is the string formed by concatenating the reverse
+# 				of each character in s.
+#  *
+#  * Solution Summary:
+#  *	- store the reverse of the characters in a dictionary.
+# 		- for string s, check if s[i] = s[len(s)-i-1] for all 0 <= i < |s|
+# 			to determine if s is a palindrome.
+# 		- create s_ and then compare s_ with reverse(s)
+#  *
+#  * Used Resources:
+#  *	None
+#  *
+#  * I hereby certify that I have produced the following solution myself
+#  * using only the resources listed above in accordance with the CMPUT
+#  * 403 collaboration policy.
+#  *
+#  *
+#  * --------------------- Anshil Gandhi
+#  */
+
+
+
+
 import sys
 
 rev = {}
@@ -46,10 +79,6 @@ def is_mirror(s):
 	if ''.join(s1) == s[::-1]:
 		return True
 	return False
-
-
-def solve(s):
-	pass
 
 def main():
 	for line in sys.stdin:
