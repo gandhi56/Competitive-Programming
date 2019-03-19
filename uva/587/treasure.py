@@ -1,3 +1,31 @@
+# /* UVa problem: 587
+#  * Topic: Geometry
+#  *
+#  * Level: easy
+#  * 
+#  * Brief problem description: 
+#  *	Given a sequence of vectors denoting movement on the Cartesian plane,
+# 		find the coordinates of the final position. Also, find the shortest
+# 		distance to the final position from the origin.
+#  *
+#  * Solution Summary:
+#  *	Simulate the walk, updating the current position using basic trig
+# 		for each direction. Use Pythagorean identity to compute the shortest
+# 		distance after computing the coordinates of the final position.
+#  *
+#  * Used Resources:
+#  *	None
+#  *
+#  * I hereby certify that I have produced the following solution myself
+#  * using only the resources listed above in accordance with the CMPUT
+#  * 403 collaboration policy.
+#  *
+#  *
+#  * --------------------- Anshil Gandhi
+#  */
+
+
+
 import sys
 
 t = 1
