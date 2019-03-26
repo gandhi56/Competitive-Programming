@@ -1,43 +1,58 @@
 #include <iostream>
 #include <vector>
 #include <queue>
-#include <climits>
 using namespace std;
 
-typedef pair<int,int> pii;
-typedef vector< vector< pii> > > graph;
+typedef pair<int,int> ii;
+typedef vector< vector< ii > > graph;
+int p[200];
+int dist[1000][200];
 
-int dist[1002];
-
-void dijkstra(graph& g, int s){
-
-	for (int i =0 ; i < g.size(); ++i){
-		dist[i] = INT_MAX;
-	}
-
-	priority_queue< pii, vector< pii >, greater<pii> > pq;
-	pq.push({0,s});
-	dist[s] = 0;
+void solve(graph& g, int s, int e, int c){
+	priority_queue< ii, vector<ii>, greater<ii> > pq;
+	pq.push(ii(0, s));
 
 	while (!pq.empty()){
-		
+		ii top = pq.top();pq.pop();
+		int d = top.first;
+		int u = top.second;
+		if (d == dist[s][u]){
+			for (auto& it : g[u]){
+				int v = it.first;
+				int w = it.second;
+				if (dist[s][u] + w < dist[s][v]){
+					dist[s][v] = dist[s][u] + w;
+					pq.push(ii(dist[s][v], v));
+				}
+			}
+		}
 	}
+
+	cout << "dist to e:" << dist[s][e] << endl;
+
 }
 
 int main(){
 	int n, m;
 	cin >> n >> m;
-
+	for (int i =0 ; i < n; ++i)	cin >> p[i];
 	graph g(n);
 	for (int i = 0; i < m; ++i){
-		int u, v, d;
-		cin >> u >> v >> d;
-		g[u].push_back({d, v});
-		g[v].push_back({d, u});
+		int u, v, w;
+		cin >> u >> v >> w;
+		g[u].push_back({w, v});
+		g[v].push_back({w, u});
 	}
 
 	int q;
 	cin >> q;
+
+
+	while (q--){
+		int s, e, c;
+		cin >> s >> e >> c;
+		solve(g, s, e, c);
+	}
 
 	return 0;
 }

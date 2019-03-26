@@ -7,15 +7,15 @@
 using namespace std;
 const double EPS = 1E-10;
 typedef complex<double> point;
-
+double cross(const point& a, const point& b){
+	return imag(conj(a)*b);
+}
 bool operator<(const point& p1, const point& p2){
 	return p1.imag() < p2.imag() || 
 		(fabs(p1.imag() - p2.imag()) < EPS && p1.real() < p2.real());
 }
 
-double cross(const point& a, const point& b){
-	return imag(conj(a)*b);
-}
+
 
 point P0;
 enum direction{ccw, cw, cl};
