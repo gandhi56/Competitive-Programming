@@ -11,7 +11,6 @@ typedef complex<double> point;
 double cross(point a, point b){	return imag(conj(a)*b);	}
 double dot(point a, point b)	{	return real(conj(a)*b);	}
 
-
 double area(vector<point> p){
 	double area = 0;
 	for (int i = p.size()-1, j = 0; j < p.size(); i = j++){
