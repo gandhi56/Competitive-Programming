@@ -4,9 +4,6 @@ using namespace std;
 
 const double eps = 1E-6;
 typedef complex<double> point;
-
-
-
 int main(){
 	int n;
 
@@ -19,6 +16,7 @@ int main(){
 			pts[i] = point(x, y);
 		}
 
+		
 
 	}
 

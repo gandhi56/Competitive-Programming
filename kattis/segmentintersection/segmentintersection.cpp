@@ -1,92 +1,120 @@
 #include <iostream>
-#include <complex>
-#include <cassert>
 #include <cmath>
-#include <algorithm>
-#include <vector>
+#include <iomanip>
 using namespace std;
 
-const double eps = 1e-6;
-typedef complex<double> point;
+const double EPS = 1E-6;
 
-double cross(point a, point b){		return imag(conj(a)*b);		}
-double dot(point a, point b){		return real(conj(a)*b);		}
-double dist(point a, point b){		return sqrt(dot(a-b, a-b));	}
-
-bool segments_parallel(point a, point b, point c, point d){
-	return fabs(cross(a-b, c-d)) < eps;
-}
-
-bool point_on_seg(point p, point a, point b){
-	return (segments_parallel(p, a, p, b) and dot(p-a, p-b) < 0);
-}
-
-bool segments_intersect(point a, point b, point c, point d){
-	if (dist(a, c) < eps or dist(a, d) < eps or dist(b, c) < eps or dist(b, d) < eps )	return true;
-	if (dist(a, b) < eps and dist(c, d) < eps)	return false;
-	if (dist(a, b) < eps) 	return point_on_seg(a, c, d);
-	if (dist(c, d) < eps)	return point_on_seg(c, a, b);
-	if (segments_parallel(a, b, c, d) and segments_parallel(a, c, b, d) and segments_parallel(a, d, b, c)){
-		return (point_on_seg(a,c,d) || 
-				point_on_seg(b,c,d) || 
-				point_on_seg(c,a,b) || 
-				point_on_seg(d,a,b));
+struct pt{
+	double x, y;
+	bool operator<(const pt& p)	const	{
+		return x < p.x - EPS || (abs(x - p.x) < EPS && y < p.y - EPS);
 	}
-	if (cross(a-b, a-c) * cross(a-b, a-d))	return false;
-	if (cross(c-d, c-a) * cross(c-d, c-b))	return false;
-	return true;
+};
+
+struct line{
+	double a, b, c;
+	line(){}
+	line(pt p, pt q){
+		a = p.y - q.y;
+		b = q.x - p.x;
+		c = -a * p.x - b * p.y;
+		norm();
+	}
+
+	void norm(){
+		double z = sqrt(a*a + b*b);
+		if (fabs(z) > EPS){
+			a /= z, b /= z, c /= z;
+		}
+	}
+
+	double dist(pt p)	const	{
+		return a*p.x + b*p.y + c;
+	}
+};
+
+double det(double a, double b, double c, double d){
+	return a*d - b*c;
 }
 
-point lines_intersect(point a, point b, point c, point d){
-	b = b - a;
-	d = c - d;
-	c = c - a;
-	assert(dot(b, b) > eps and dot(d, d) > eps);
-	return a + b * cross(c, d) / cross(b, d);
+inline bool betw(double l, double r, double x){
+	return min(l, r) <= x + EPS and x <= max(l, r) + EPS;
 }
 
-void solve(point a, point b, point c, point d){
-	if (!segments_intersect(a, b, c, d))	cout << "none" << endl;
-	else if (segments_parallel(a, b, c, d)){
-		if (dist(a, b) < eps){
-			cout << a.real() << " " << a.imag() << endl;
-		}
-		else if (dist(c, d) < eps){
-			cout << c.real() << " " << c.imag() << endl;
-		}
-		else{
-			point pts[] = {a, b, c, d};
-			sort(pts, pts+4);
-			if (dist(pts[1], pts[2]) < eps)	
-				cout << pts[1].real() << " " << pts[1].imag();
-			else{
-				for (int i = 1; i < 3; ++i){
-					cout << pts[i].real() << " " << pts[i].imag();
-				}
-			}
-			cout << endl;
-		}
+inline bool intersect(double a, double b, double c, double d){
+	if (a > b)	swap(a, b);
+	if (c > d)	swap(c, d);
+	return max(a, c) <= min(b, d) + EPS;
+}
+
+bool solve(pt a, pt b, pt c, pt d, pt& left, pt& right){
+	if (!intersect(a.x, b.x, c.x, d.x) || 
+		!intersect(a.y, b.y, c.y, d.y))	
+		return false;
+	line m(a, b);
+	line n(c, d);
+	double zn = det(m.a, m.b, n.a, n.b);
+	if (fabs(zn) < EPS){
+		if (fabs(m.dist(c)) > EPS || fabs(n.dist(a)) > EPS)
+			return false;
+		if (b < a)	swap(a, b);
+		if (d < c)	swap(c, d);
+		left = max(a, c);
+		right = min(b, d);
+		return true;
 	}
 	else{
-		point ans = lines_intersect(a, b, c, d);
-		cout << ans.real() << " " << ans.imag() << endl;
+		left.x = right.x = -det(m.c, m.b, n.c, n.b) / zn;
+		left.y = right.y = -det(m.a, m.c, n.a, n.c) / zn;
+		return betw(a.x, b.x, left.x) && betw(a.y, b.y, left.y) &&
+				betw(c.x, d.x, left.x) && betw(c.y, d.y, left.y);
 	}
 }
 
 int main(){
-	int t;
-	cin >> t;
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
 
-	while (t--){
-		int x1, y1, x2, y2, x3, y3, x4, y4;
-		cin >> x1 >> y1 >> x2 >> y2 >> x3 >> y3 >> x4 >> y4;
+	cout << fixed << setprecision(2);
 
-		point a(x1, y1);
-		point b(x2, y2);
-		point c(x3, y3);
-		point d(x4, y4);
+	int n;
+	cin >> n;
 
-		solve(a, b, c, d);
+	while (n--){
+		pt a, b, c, d, l, r;
+		cin >> a.x >> a.y >> b.x >> b.y >> c.x >> c.y >> d.x >> d.y;
+		
+		if (solve(a, b, c, d, l, r)){
+			if (fabs(l.x - r.x) < EPS and fabs(l.y - r.y) < EPS){
+				if (fabs(l.x) < EPS){
+					cout << fabs(l.x) << " ";
+				}
+				else{
+					cout << l.x << " ";
+				}
+
+				if (fabs(l.y) < EPS){
+					cout << fabs(l.y) << endl;
+				}
+				else{
+					cout << l.y << endl;
+				}
+			}
+			else{
+				if (r.x < l.x){
+					swap(l, r);
+				}
+				else if (fabs(r.x - l.x) < EPS){
+					if (r.y < l.y)	swap(l, r);
+				}
+				cout << l.x << " " << l.y << " ";
+				cout << r.x << " " << r.y << endl;
+			}
+		}
+		else{
+			cout << "none" << endl;
+		}
 	}
 
 	return 0;
