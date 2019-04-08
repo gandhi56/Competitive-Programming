@@ -1,36 +1,28 @@
 #include <iostream>
 #include <set>
-#include <algorithm>
-#include <cctype>
 using namespace std;
 
-struct classcomp{
-	bool operator()(const string& a, const string& b) const {
-		return a < b;
-	}
-};
-
 int main(){
-	set<string, classcomp> words;
+	set<string> words;
 	string word;
 	while (cin >> word){
 		string _word = "";
-		for (int i = 0; i < word.length(); ++i){
-			if (word[i] >= 'a' and word[i] <= 'z'){
-				_word.push_back(word[i]);
+		for (int i = 0;i < word.size(); ++i){
+			char c = tolower(word[i]);
+			if (c >= 'a' and c <= 'z'){
+				_word += c;
 			}
-			else if (word[i] >= 'A' and word[i] <= 'Z'){
-				_word.push_back(tolower(word[i]));
+			else if (_word != ""){
+				words.insert(_word);
+				_word = "";
 			}
 		}
 
-		if (_word != "")words.insert(_word);
+		if (_word != "")	words.insert(_word);
 	}
 
-	//sort(words.begin(), words.end());
-
-	for (string w : words){
-		cout << w << endl;
+	for (auto it = words.begin(); it != words.end(); ++it){
+		cout << *it << endl;
 	}
 
 	return 0;
