@@ -1,63 +1,113 @@
 #include <iostream>
 #include <vector>
-#include <bitset>
+#include <cstring>
+#include <algorithm>
 using namespace std;
 
-typedef vector<int> vi;
-typedef vector< vector<int> > vii;
-typedef vector<bool> vb;
+typedef unsigned long long ll;
+typedef vector< vector<ll> > graph;
 
-bitset<20010> used;
-
-void dfs1(vii& g, int v, vi& order){
-    used.set(v);
-    for (auto w : g[v]){
-        if (!used[w])   dfs1(g, w, order);
-    }
-    order.push_back(v);
+void dfs1(graph& g, ll u, bool* visited, vector<ll>& order){
+	visited[u] = true;
+	for (auto v : g[u]){
+		if (!visited[v]){
+			dfs1(g, v, visited, order);
+		}
+	}
+	order.push_back(u);
 }
 
-void dfs2(vii& gr, int v){
-    used.set(v);
-    for (auto w : gr[v]){
-        if (!used[w])   dfs2(gr, w);
-    }
+void dfs2(graph& g, ll u, bool* visited){
+	visited[u] = true;
+	for (auto v : g[u]){
+		if (!visited[v])
+			dfs2(g, v, visited);
+	}
 }
 
 int main(){
-    int t;
-    cin >> t;
+	int t;
+	cin >> t;
 
-    while (t--){
-        used.reset();
+	while (t--){
+		ll n, m;
+		cin >> n >> m;
 
-        int n, m;
-        cin >> n >> m;
+		graph g(n);
+		graph gr(n);
+		while (m--){
+			ll u, v;
+			cin >> u >> v;
+			g[u-1].push_back(v-1);
+			gr[v-1].push_back(u-1);
+		}
 
-		vii g(n+1), gr(n+1);
-		vi order;
-        while (m--){
-            int a, b;
-            cin >> a >> b;
-            g[a].push_back(b);
-            gr[b].push_back(a);
-        }
+		vector<ll> order, scc;
+		bool visited[n];
+		memset(visited, false, sizeof(visited));
+		for (ll u = 0; u < n; ++u){
+			if (!visited[u]){
+				dfs1(g, u, visited, order);
+			}
+		}
 
-        used.reset();
-        for (int i = 1; i <= n; ++i){
-            if (!used[i])   dfs1(g, i, order);
-        }
+		vector< vector<int> > sccs, scc_graph;
+		vector<int> scc_id(n, -1);
+		memset(visited, false, sizeof(visited));
+		while (!order.empty()){
+			int u = order.back();
+			order.pop_back();
+			if (visited[u])	continue;
+			dfs1(gr, u, visited, scc);
+			sccs.emplace_back();
+			while (!scc.empty()){
+				sccs.back().push_back(scc.back());
+				scc_id[scc.back()] = sccs.size() -1;
+				scc.pop_back();
+			}
+		}
 
-        used.reset();
-        int count = 0;
-        for (int i = 1; i <= n; ++i){
-            int v = order[n-i];
-            if (!used[v]){
-                dfs2(gr, v);
-                count++;
-            }
-        }
-        cout << count << endl;
-    }
-    return 0;
+		scc_graph.resize(sccs.size());
+
+		for (int i =0 ; i < sccs.size(); ++i){
+			for (auto const& u : sccs[i]){
+				for (auto const& v : g[u]){
+					if (i != scc_id[v]){
+						scc_graph[i].push_back(scc_id[v]);
+					}
+				}
+			}
+		}
+
+		if (scc_graph.size() == 1){
+			cout << 0 << endl;
+			continue;
+		}
+
+		int nooutedges = 0;
+		int noinedges = 0;
+		vector<bool> in_edges(scc_graph.size(), false);
+		for (int u = 0; u < scc_graph.size(); ++u){
+			if (g[u].empty())	++nooutedges;
+			for (auto const& v : g[u]){
+				in_edges[v] = true;
+			}
+		}
+
+		for (int i = 0; i < scc_graph.size(); ++i){
+			if (!in_edges[i])	++noinedges;
+		}
+
+		if (noinedges > nooutedges){
+			cout << noinedges << endl;
+		}
+		else{
+			cout << nooutedges << endl;
+		}
+
+
+	}
+
+
+	return 0;
 }
