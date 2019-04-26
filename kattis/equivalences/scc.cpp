@@ -1,62 +1,66 @@
 #include <iostream>
 #include <vector>
-#include <stack>
+#include <cstring>
 using namespace std;
 
-typedef vector< vector<int> > graph;
+const int maxn = 20001;
+int n;
+vector<int> adj[maxn*2];
+vector<int> adjrev[maxn*2];
+int val[maxn];
+int marker, dfst, dfstime[maxn*2], dfsorder[maxn*2];
+int group[maxn*2];
 
-int index[20005];
-int low[20005];
-int currIndex;
-
-void scc(graph& g, int u, stack<int>& s){
-	index[u] = currIndex;
-	low[u] = currIndex;
-	currIndex++;
-	s.push(u);
-
-	for (auto v : g[u]){
-		if (index[v] == -1){
-			scc(g, v, s);
-		}
-		low[u] = min(low[u], low[v]);
-	}
+void dfs(int v){
+	if (dfstime[v] != -1)	return;
+	dfstime[v] = -2;
+	int deg = adjrev[v].size();
+	for (int i = 0; i < deg; ++i)	dfs(adjrev[v][i]);
+	dfstime[v] = dfst++;
 }
 
-void tarjan(graph g){
-	stack<int> s;
-	int count = 0;
-	for (int u = 0; u < g.size(); ++u)	index[u] = -1;
+void dfsn(int v){
+	if (group[v] != -1)	return;
+	group[v] = marker;
+	int deg = adj[v].size();
+	for (int i = 0; i < deg; ++i)	dfsn(adj[v][i]);
+}
 
-	for (int u =0 ; u < g.size(); ++u){
-		if (index[u] == -1){
-			scc(g, u, s);
-			count++;
-		}
+bool solve(){
+	dfst = 0;
+	memset(dfstime, -1, sizeof(dfstime));
+	for (int i = 0; i < n+n; ++i)	dfs(i);
+	memset(val, -1, sizeof(val));
+	for (int i = 0; i < n+n; ++i)	dfsorder[n+n-dfstime[i]-1] = i;
+	memset(group, -1, sizeof(group));
+	for (int i = 0; i < n+n; ++i){
+		marker = i;
+		dfsn(dfsorder[i]);
 	}
-	cout << count << endl;
+	cout << marker << endl;
 }
 
 int main(){
 	int t;
-	cin >> t;
-
+	cin>> t;
 	while (t--){
-		int n, m;
+		int m;
 		cin >> n >> m;
+		
+		for (int i = 0; i < n; ++i){
+			adj[i].clear(); adj[i].resize(n, 0);
+			adjrev[i].clear(); adjrev[i].resize(n, 0);
+		}
 
-		currIndex = 0;
-
-		graph g(n);
 		while (m--){
 			int u, v;
 			cin >> u >> v;
-			g[u-1].push_back(v-1);
+			u--; v--;
+			adj[u][v] = 1;
+			adjrev[v][u] = 1;
 		}
 
-		tarjan(g);
-
+		solve();
 	}
-
 	return 0;
 }

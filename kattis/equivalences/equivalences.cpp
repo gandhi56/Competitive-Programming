@@ -1,28 +1,45 @@
 #include <iostream>
 #include <vector>
+#include <stack>
 #include <cstring>
-#include <algorithm>
 using namespace std;
 
-typedef unsigned long long ll;
-typedef vector< vector<ll> > graph;
+#define maxn 20005
 
-void dfs1(graph& g, ll u, bool* visited, vector<ll>& order){
-	visited[u] = true;
-	for (auto v : g[u]){
-		if (!visited[v]){
-			dfs1(g, v, visited, order);
+typedef vector<int> vi;
+typedef vector< vi > vii;
+
+int n, m;
+int foundat = 1;
+vii g;
+vi disc, low;
+bool onstack[maxn];
+
+bool tarjan(int u){
+	static stack<int> s;
+	disc[u] = low[u] = foundat++;
+	s.push(u);
+	onstack[u] = true;
+	for (auto i : g[u]){
+		if (disc[i] == -1){
+			tarjan(i);
+			low[u] = min(low[u], low[i]);
+		}
+		else if (onstack[i]){
+			low[u] = min(low[u], low[i]);
 		}
 	}
-	order.push_back(u);
-}
 
-void dfs2(graph& g, ll u, bool* visited){
-	visited[u] = true;
-	for (auto v : g[u]){
-		if (!visited[v])
-			dfs2(g, v, visited);
+	if (disc[u] == low[u]){
+		while (1){
+			int v = s.top();
+			s.pop();
+			onstack[v] = false;
+			if (u == v)	break;
+		}
+		return true;
 	}
+	return false;
 }
 
 int main(){
@@ -30,84 +47,27 @@ int main(){
 	cin >> t;
 
 	while (t--){
-		ll n, m;
 		cin >> n >> m;
 
-		graph g(n);
-		graph gr(n);
+		memset(onstack, false, sizeof(onstack));
+		g.clear(); g.resize(n+1);
+		disc.clear(); disc.resize(n+1, -1);
+		low.clear(); low.resize(n+1);
+	
 		while (m--){
-			ll u, v;
+			int u, v;
 			cin >> u >> v;
-			g[u-1].push_back(v-1);
-			gr[v-1].push_back(u-1);
+			g[u].push_back(v);
 		}
 
-		vector<ll> order, scc;
-		bool visited[n];
-		memset(visited, false, sizeof(visited));
-		for (ll u = 0; u < n; ++u){
-			if (!visited[u]){
-				dfs1(g, u, visited, order);
+		int count = 0;
+		for (int i = 1; i <= n; ++i){
+			if (disc[i] == -1){
+				if (tarjan(i))	count++;
 			}
 		}
-
-		vector< vector<int> > sccs, scc_graph;
-		vector<int> scc_id(n, -1);
-		memset(visited, false, sizeof(visited));
-		while (!order.empty()){
-			int u = order.back();
-			order.pop_back();
-			if (visited[u])	continue;
-			dfs1(gr, u, visited, scc);
-			sccs.emplace_back();
-			while (!scc.empty()){
-				sccs.back().push_back(scc.back());
-				scc_id[scc.back()] = sccs.size() -1;
-				scc.pop_back();
-			}
-		}
-
-		scc_graph.resize(sccs.size());
-
-		for (int i =0 ; i < sccs.size(); ++i){
-			for (auto const& u : sccs[i]){
-				for (auto const& v : g[u]){
-					if (i != scc_id[v]){
-						scc_graph[i].push_back(scc_id[v]);
-					}
-				}
-			}
-		}
-
-		if (scc_graph.size() == 1){
-			cout << 0 << endl;
-			continue;
-		}
-
-		int nooutedges = 0;
-		int noinedges = 0;
-		vector<bool> in_edges(scc_graph.size(), false);
-		for (int u = 0; u < scc_graph.size(); ++u){
-			if (g[u].empty())	++nooutedges;
-			for (auto const& v : g[u]){
-				in_edges[v] = true;
-			}
-		}
-
-		for (int i = 0; i < scc_graph.size(); ++i){
-			if (!in_edges[i])	++noinedges;
-		}
-
-		if (noinedges > nooutedges){
-			cout << noinedges << endl;
-		}
-		else{
-			cout << nooutedges << endl;
-		}
-
-
+		cout << count << endl;
 	}
-
 
 	return 0;
 }
