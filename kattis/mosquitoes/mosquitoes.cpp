@@ -1,89 +1,60 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <cmath>
 using namespace std;
 
-#define MAXN 100
 #define EPS 1E-5
 
-typedef complex<double> point;
+struct point{
+	double x, y;
+};
 
-point points[MAXN];
-double dis[MAXN][MAXN];
-
-// max number of points that can lie inside the circle
-// of radius 'r' being rotated about point 'i'
-int getPointsInside(int i, double r, int n){
-	vector< pair<double,bool> > angles;
-	for (int j = 0; j < n; ++j){
-		if (i != j and dis[i][j] <= 2*r){
-			double B = acos(dis[i][j]/(2*r));
-			double A = arg(points[j]-points[i]);
-			double alpha = A-B;
-			double beta = A+B;
-			angles.push_back(make_pair(alpha, true));
-			angles.push_back(make_pair(beta, false));
-		}
-	}
-
-	sort(angles.begin(), angles.end());
-
-	int count = 1, res = 1;
-	vector< pair<double,bool> >::iterator it;
-	for (it = angles.begin(); it != angles.end(); ++it){
-		if (it->second){
-			count++;
-		}
-		else{
-			count--;
-		}
-
-		if (count > res){
-			res = count;
-		}
-	}
-
-	return res;
+double dist(point a, point b){
+	return (double)sqrt( (a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y) );
 }
 
-int maxPoints(point points[], int n, double r){
-	for (int i = 0; i < n-1; ++i){
-		for (int j = i + 1; j < n; ++j){
-			dis[i][j] = dis[j][i] = abs(points[i] - points[j]) + EPS;
+void center(point a, point b, double r, point& c){
+	point mid;
+	mid.x = (double)((a.x+b.x)/2);
+	mid.y = (double)((a.y+b.y)/2);
+	double amid = dist(a, mid);
+	double midcent = sqrt(r*r - amid*amid);
+	double rad = atan2(a.x-b.x, b.y-a.y);
+	c.x = midcent*cos(rad)+mid.x;
+	c.y = midcent*sin(rad)+mid.y;
+}
+
+void solve(point pt[], int m, double d){
+	int best = 0;
+	double r = d / 2.0;
+	point c;
+	for (int i = 0; i < m; ++i){
+		for (int j = 0; j < m; ++j){
+
+			center(pt[i], pt[j], r, c);
+			int count = 0;
+			for (int k = 0; k < m; ++k){
+				if (dist(c, pt[k])-EPS <= r)	count++;
+			}
+			best = max(best, count);
 		}
 	}
-
-	int ans = 0;
-	for (int i = 0; i < n; ++i){
-		ans = max(ans, getPointsInside(i, r, n));
-	}
-
-	return ans;
+	cout << best << endl;
 }
 
 int main(){
-	
 	int n;
-	while (cin >> n){
-		string s;
-		getline(cin,s);
-		while (1){
+	cin >> n;
+	while (n--){
+		int m;
+		double d;
+		cin >> m >> d;
 
-			getline(cin,s);
+		point pt[m];
+		for (int i = 0; i < m; ++i)	cin >> pt[i].x >> pt[i].y;
 
-			int m;
-			double d;
-			cin >> m >> d;
+		solve(pt, m, d);
 
-			double r = d / 2.0;
-			for (int i = 0; i < m; ++i){
-				double x, y;
-				cin >> x >> y;
-				points[i] = point(x, y);
-			}
-
-			cout << maxPoints(points, m, r) << endl;
-		}
 	}
-	
+
 	return 0;
 }
-

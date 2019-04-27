@@ -13,7 +13,7 @@ void solve(ii s){
 	while (!q.empty()){
 		ii u = q.front();
 		q.pop();
-		for (ii k : {{1, 0}, {-1, 0}, {0, 1}, {0, -1}}){
+		for (ii k : { {1, 0}, {-1, 0}, {0, 1}, {0, -1} }){
 			ii adj = {u.first+k.first, u.second+k.second};
 			if (g[u.first+k.first][u.second+k.second]=='*')
 				continue;

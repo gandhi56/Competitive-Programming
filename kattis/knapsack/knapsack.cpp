@@ -4,7 +4,7 @@ using namespace std;
 
 const int INF = 1e8;
 
-double cap;
+int cap;
 int n;
 int w[2002];
 int v[2002];
@@ -23,7 +23,7 @@ int main(){
 			cin >> v[i] >> w[i];
 		}
 
-		cout << solve(0, floor(cap)) << endl;
+		cout << solve(0, cap) << endl;
 	}
 
 	return 0;
