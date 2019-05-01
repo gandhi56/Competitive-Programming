@@ -3,18 +3,28 @@ c = [-1]
 for i in range(n):
 	c.append(int(input()))
 
+INF = 9999999
+
 dp = {}
-def solve(i, j):
-	print(i)
-	if i <= 0 or i > n:
-		return 999999
-	if (i,j) in dp:
-		return dp[(i,j)]
-	if i == n:
-		dp[(i,j)] = c[n]
-	dp[(i,j)] = min(solve(i+j+1, j+1), solve(i-j, j))
+def solve(pos, jump, cost_so_far):
+	if (pos,jump) in dp.keys():
+		return dp[(pos, jump)]
+	if pos == n:
+		dp[(pos,jump)] = cost_so_far
+	else:
+		fpos = pos+jump+1
+		bpos = pos-jump
 
-	return dp[(i,j)]
+		fsol = INF
+		if fpos <= n:
+			fsol = solve(fpos, jump+1, cost_so_far + c[fpos])
 
-print(solve(1, 1))
+		bsol = INF
+		if bpos > 0:
+			bsol = solve(bpos, jump, cost_so_far + c[bpos])
+
+		dp[(pos,jump)] = min(fsol, bsol)
+	return dp[(pos,jump)]
+
+print(solve(2, 1, c[2]))
 
