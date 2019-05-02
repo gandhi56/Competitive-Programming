@@ -33,31 +33,5 @@ int main(){
 		g[u].push_back(v);
 		g[v].push_back(u);
 	}
-
-	// find the node with the largest diameter
-	int k1;
-	int dist[c], id[c];
-	memset(dist, -1, sizeof(dist));
-	for (int i = 0; i < g.size(); ++i){
-		if (dist[i] != -1)	continue;
-		bfs(g, i, dist);
-	}
-
-	k1 = *max_element(dist, dist+c);
-	memset(dist, -1, sizeof(dist));
-
-	bfs(g, k1, dist);
-
-	for (int i = 0; i < c; ++i){
-		if (dist[i] != -1)	id[i] = 1;
-	}
-	int currId = 2;
-	for (int i = 0; i < c; ++i){
-		if (dist[i] == -1){
-			bfs(g, i, dist);
-			for ()
-		}
-	}
-
 	return 0;
 }
