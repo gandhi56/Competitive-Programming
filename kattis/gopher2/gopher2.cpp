@@ -4,15 +4,18 @@
 #include <algorithm>
 #include <limits>
 #include <queue>
-#include <cstring>
+#include <cmath>
+
+#define EPS 0.001
 
 using namespace std;
 
 // Flow graph implementation, including reverse-edge pointers.
 struct FlowEdge {
-	FlowEdge() : dst(0), src(0), cap(0), flow(0) {}
+	FlowEdge() : dst(0), src(0), cap(0.0), flow(0.0) {}
 	FlowEdge(int src, int dst, int cap) : src(src), dst(dst), cap(cap), flow(0) {}
-	int dst, src, cap;
+	int dst, src;
+	int cap;
 	int flow;
 	FlowEdge *redge;
 };
@@ -23,37 +26,38 @@ typedef vector<list<FlowEdge> >::iterator NodeIterator;
 typedef vector<list<FlowEdge> >::const_iterator ConstNodeIterator;
 typedef list<FlowEdge>::iterator EdgeIterator;
 typedef list<FlowEdge>::const_iterator ConstEdgeIterator;
+typedef pair<double, double> dd;
 
 struct FlowGraph {
 	FlowGraph(int N) : graph(N, list<FlowEdge>()) {}
 	void reserve(int N) { graph.reserve(N); }
-	void addEdge(int src, int dst, int cap)
-	{
+	void addEdge(int src, int dst, int cap){
 		graph[src].push_back(FlowEdge(src, dst, cap));
 		FlowEdge *e1 = &graph[src].back();
 		graph[dst].push_back(FlowEdge(dst, src, 0));
 		FlowEdge *e2 = &graph[dst].back();
-		e1->redge = e2;	// Carefully assign pointers to reverse edges.
-		e2->redge = e1;	// This is really bad and likely buggy. Should be fixed.
+		e1->redge = e2;
+		e2->redge = e1;
 	}
 	AdjFlowGraph graph;
 };
 
-int EdmondsKarp(FlowGraph& FG, int source, int sink)
-{
+int EdmondsKarp(FlowGraph& FG, int source, int sink){
 	while (1) {
 		queue<int> visitQueue;
 		vector<bool> visited(FG.graph.size(), false);
 		vector<FlowEdge *> pathTo(FG.graph.size(), NULL);
 		visitQueue.push(source);
 		visited[source] = true;
+		
 		int cur;
 
-		// find shortest source to sink path
+
 		while (1) {
 			if (visitQueue.empty()) {
 				int flow = 0;
-				for (ConstEdgeIterator it = FG.graph[source].begin(); it != FG.graph[source].end(); ++it) {
+				for (ConstEdgeIterator it = FG.graph[source].begin();
+						it != FG.graph[source].end(); ++it) {
 					flow += it->flow;
 				}
 				return flow;
@@ -61,21 +65,17 @@ int EdmondsKarp(FlowGraph& FG, int source, int sink)
 			cur = visitQueue.front();
 			visitQueue.pop();
 			if (cur == sink) break;
-			for (EdgeIterator it = FG.graph[cur].begin(); it != FG.graph[cur].end(); ++it) {
+			for (EdgeIterator it = FG.graph[cur].begin();it != FG.graph[cur].end(); ++it) {
 				if (visited[it->dst] || it->flow >= it->cap) continue;
 				visitQueue.push(it->dst);
 				visited[it->dst] = true;
 				pathTo[it->dst] = &*it;
 			}
 		}
-
-		// find the flow update value
 		int capacity = numeric_limits<int>::max();
 		for (int loc = cur; loc != source; loc = pathTo[loc]->src) {
 			capacity = min(pathTo[loc]->cap - pathTo[loc]->flow, capacity);
 		}
-
-		// backprop
 		for (int loc = cur; loc != source; loc = pathTo[loc]->src) {
 			pathTo[loc]->flow += capacity;
 			pathTo[loc]->redge->flow -= capacity;
@@ -83,51 +83,61 @@ int EdmondsKarp(FlowGraph& FG, int source, int sink)
 	}
 }
 
-void dfs(FlowGraph& fg, int s, bool* visited){
-	visited[s] = true;
-	for (EdgeIterator it = fg.graph[s].begin(); it != fg.graph[s].end(); ++it){
-		if (!visited[it->dst] and it->cap - it->flow > 0){
-			dfs(fg, it->dst, visited);
-		}
-	}
+inline double SQ(double x){
+	return x*x;
+}
+
+inline double getDist(dd a, dd b){
+	return sqrt( SQ(a.first-b.first) + SQ(a.second-b.second) );
 }
 
 int main(){
+	int n, m; 
+	double s, v;
+	while (cin >> n >> m >> s >> v){
+		vector< dd > gophers, holes;
+		for (int i = 0; i < n; ++i){
+			double x, y;
+			cin >> x >> y;
+			gophers.push_back({x, y});
+		}
 
-	ios::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
+		for (int i =0 ; i < m; ++i){
+			double x, y;
+			cin >> x >> y;
+			holes.push_back({x, y});
+		}
 
-	int n, m, s, t;
-	cin >> n >> m >> s >> t;
+		// 0..n-1 - gophers
+		// n..n+m-1 - holes
+		// n+m - sink
+		// n+m+1 - source
+		FlowGraph fg(gophers.size()+holes.size()+2);
+		const int source = gophers.size()+holes.size()+1;
+		const int sink = gophers.size()+holes.size();
 
-	FlowGraph fg(n);
-	while (m--){
-		int u, v, w;
-		cin >> u >> v >> w;
-		fg.addEdge(u, v, w);
-	}
+		for (int i = 0; i < gophers.size(); ++i){
+			for (int j = 0; j < holes.size(); ++j){
+				double dist = getDist(gophers[i], holes[i]);
+				double time = dist / v;
+				if (time <= s)
+					fg.addEdge(i, n+j, 1);
+			}
+		}
+		for (int i = 0; i < gophers.size(); ++i){
+			fg.addEdge(source, i, 1);
+		}
+		for (int i = 0; i < holes.size(); ++i){
+			fg.addEdge(gophers.size()+i, sink, 1);
+		}
 
-	int flow = EdmondsKarp(fg, s, t);
+		int count = EdmondsKarp(fg, source, sink);
 
-	bool visited[n];
-	memset(visited, false, sizeof(visited));
-	dfs(fg, s, visited);
-
-	int count = 0;
-	for (int i = 0; i < n; ++i){
-		if (visited[i])
-			count++;
-	}
-
-	cout << count << endl;
-	for (int i = 0; i < n; ++i){
-		if (visited[i])
-			cout << i << endl;
+		cout << gophers.size() - count << endl;
+	
 	}
 
 	return 0;
 }
-
 
 

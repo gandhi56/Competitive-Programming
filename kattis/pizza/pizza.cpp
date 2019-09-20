@@ -18,6 +18,10 @@ int get_cost(int xx, int yy){
 }
 
 int main(){
+
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+
 	int t;
 	cin >> t;
 
@@ -59,7 +63,20 @@ int main(){
 		int minCost = get_cost(0, 0);
 		for (int yy = 0; yy < y; ++yy){
 			for (int xx = 0; xx < x; ++xx){
-				//minCost = min(minCost, cost(yy, xx));
+
+				int cost = 0;
+				bool ok = true;
+				for (int i = 0; i < y and ok; ++i){
+					for (int j = 0; j < x and ok; ++j){
+						cost += (abs(xx - j) + abs(yy - i)) * g[i][j];
+						if (cost > minCost){
+							ok = false;
+						}
+					}
+				}
+
+				minCost = min(minCost, cost);
+
 			}
 		}
 
