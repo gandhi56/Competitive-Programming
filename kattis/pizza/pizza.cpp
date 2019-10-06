@@ -34,47 +34,21 @@ int main(){
 			}
 		}
 		
-		for (int r = 0; r < y; ++r){
-			int total =0 ;
-			for (int c =0 ; c < x; ++c){
-				total += g[r][c];
-			}
-			if (total){
-				rsum[r] = rsum[r-1] + total;
-			}
-			else{
-				rsum[r] = total;
-			}
-		}
-
-		for (int c = 0; c < x; ++c){
-			int total =0 ;
-			for (int r =0 ; r < y; ++r){
-				total += g[r][c];
-			}
-			if (total){
-				csum[c] = csum[c-1] + total;
-			}
-			else{
-				csum[c] = total;
-			}
-		}
 		
 		int minCost = get_cost(0, 0);
 		for (int yy = 0; yy < y; ++yy){
 			for (int xx = 0; xx < x; ++xx){
 
 				int cost = 0;
-				bool ok = true;
-				for (int i = 0; i < y and ok; ++i){
-					for (int j = 0; j < x and ok; ++j){
+				for (int i = 0; i < y; ++i){
+					for (int j = 0; j < x; ++j){
 						cost += (abs(xx - j) + abs(yy - i)) * g[i][j];
 						if (cost > minCost){
-							ok = false;
+							goto done;
 						}
 					}
 				}
-
+		done:
 				minCost = min(minCost, cost);
 
 			}
