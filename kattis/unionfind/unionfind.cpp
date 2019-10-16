@@ -1,42 +1,29 @@
 #include <iostream>
-#include <cstdio>
 using namespace std;
 
-typedef pair<int,int> ii;
-
-int par[1000000];
-int rk[1000000];
-
-void initSet(int size){
+inline void initSet(int* par, int size){
 	for (int i = 0; i < size; ++i){
 		par[i] = i;
-		rk[i] = 1;
 	}
 }
 
-int findSet(int i){
+int findSet(int* par,  int i){
 	while (i != par[i]){
 		i = par[i];
 	}
 	return i;
 }
 
-void unionSet(int i, int j){
-	i = findSet(i);
-	j = findSet(j);
+void unionSet(int* par, int i, int j){
 	if (i == j)	return;
-	if (rk[i] < rk[j]){
-		par[i] = j;
-		rk[j] += rk[i];
-	}
-	else{
-		par[j] = i;
-		rk[i] += rk[j];
-	}
+	i = findSet(par, i);
+	j = findSet(par, j);
+	if (i == j)	return;
+	par[i] = j;
 }
 
-bool isSameSet(int i, int j){
-	return findSet(i) == findSet(j);
+bool isSameSet(int* par, int i, int j){
+	return findSet(par, i) == findSet(par, j);
 }
 
 int main(){
@@ -47,14 +34,15 @@ int main(){
 	int n, q;
 	cin >> n >> q;
 
-	initSet(n);
+	int par[n];
+	initSet(par, n);
 
 	while (q--){
 		char c;
 		int a, b;
 		cin >> c >> a >> b;
 		if (c == '?'){
-			if (isSameSet(a, b)){
+			if (isSameSet(par, a, b)){
 				cout << "yes" << endl;
 			}
 			else{
@@ -62,7 +50,7 @@ int main(){
 			}
 		}
 		else{
-			unionSet(a, b);
+			unionSet(par, a, b);
 		}
 	}
 

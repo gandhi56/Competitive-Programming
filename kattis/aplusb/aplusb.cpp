@@ -1,30 +1,47 @@
+// fast fourier
 #include <iostream>
 #include <algorithm>
 using namespace std;
 
-int main(){
-	long n;
-	cin >> n;
+typedef long long ll;
 
-	long arr[n];
-	for (long i =0 ; i < n; ++i){
-		cin >> arr[i];
+bool find(ll arr[], int n, ll x){
+	int lo = 0;
+	int hi = n-1;
+	while (lo <= hi){
+		ll mid = (lo+hi)/2;
+		if (arr[mid] < x){
+			lo = mid + 1;
+		}
+		else if (arr[mid] > x){
+			hi = mid - 1;
+		}
+		else{
+			return true;
+		}
 	}
+	return false;
+}
 
-	sort(arr, arr+n);
+int main(){
+	int n;
+	cin>> n;
 
-	long count = 0;
-	for (long i = 0; i < n; ++i){
-		for (long j = i+1; j < n; ++j){
-			for (long k = 0; k < n; ++k){
-				if (arr[i] + arr[j] == arr[k]){
-					count++;
-				}
+	ll nums[n];
+	for (int i = 0; i < n; ++i)
+		cin >> nums[i];
+
+	int count = 0;
+	sort(nums, nums+n);
+	for (int i = 0; i < n; ++i){
+		for (int j = i+1; j < n; ++j){
+			if (find(nums, n, nums[i] + nums[j])){
+				count += 2;
 			}
 		}
 	}
 
-	cout << count*2 << endl;
+	cout << count << endl;
 
 	return 0;
 }

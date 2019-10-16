@@ -92,6 +92,10 @@ inline double getDist(dd a, dd b){
 }
 
 int main(){
+
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+
 	int n, m; 
 	double s, v;
 	while (cin >> n >> m >> s >> v){
@@ -113,12 +117,12 @@ int main(){
 		// n+m - sink
 		// n+m+1 - source
 		FlowGraph fg(gophers.size()+holes.size()+2);
-		const int source = gophers.size()+holes.size()+1;
-		const int sink = gophers.size()+holes.size();
+		const int source = n+m+1;
+		const int sink = n+m;
 
-		for (int i = 0; i < gophers.size(); ++i){
-			for (int j = 0; j < holes.size(); ++j){
-				double dist = getDist(gophers[i], holes[i]);
+		for (int i = 0; i < n; ++i){
+			for (int j = 0; j < m; ++j){
+				double dist = getDist(gophers[i], holes[j]);
 				double time = dist / v;
 				if (time <= s)
 					fg.addEdge(i, n+j, 1);
