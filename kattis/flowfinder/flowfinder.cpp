@@ -15,6 +15,8 @@ ll oflow[MAXN];
 int main(){
 	cin >> n;
 	graph g(n);
+
+	// input graph
 	for (int i = 1; i < n; ++i){
 		int u;
 		cin >> u;--u;
@@ -23,39 +25,40 @@ int main(){
 	}
 	par[0] = -1;
 
+	// input flow
 	for (int i = 0; i < n; ++i){
 		cin >> flow[i];
 		oflow[i] = flow[i];
-		lflow[i] = 1LL;
+		lflow[i] = 0LL;
+	}
+
+	// set min flow for each node
+	for (int i = n-1; i >= 0; --i){
+		ll tot = 0;
+		for (auto& x : g[i])
+			tot += lflow[x];
+		lflow[i] = max((ll)1, flow[i]);
+		lflow[i] = max(lflow[i], tot);
 	}
 
 	// bottom up traversal
 	for (int i = n-1; i >= 0; --i){
+		if (g[i].size() == 0)	continue;
 		ll tot =0;
-		if (g[i].size() > 0){
-			// check if all flow values of children are known
-			bool ok = true;
-			for (auto& x : g[i]){
-				if (flow[x] == 0){
-					ok = false;
-					break;
-				}
-				tot += flow[x];
-			}
-			if (ok){
-				flow[i] = tot;
-				lflow[i] = tot;
-			}
-		}
-
-		// sum of lower bounds of flow of each child
-		tot = 0;
+		bool ok = true;
 		for (auto& x : g[i]){
-			tot += lflow[x];
+			if (flow[x] == 0){
+				ok = false;
+				break;
+			}
+			tot += flow[x];
 		}
-		lflow[i] = max((ll)1, flow[i]);
-		lflow[i] = max(lflow[i], tot);
+		if (ok){
+			flow[i] = tot;
+			lflow[i] = tot;
+		}
 	}
+	
 
 	// top down traversal
 	for (int i = 0; i < n; ++i){
@@ -77,9 +80,8 @@ int main(){
 			flow[i] = 0;
 		}
 		for (auto& x : g[i]){
-			if (flow[x] == 0){
+			if (flow[x] == 0)
 				flow[x] = lflow[x] + rem;
-			}
 		}
 	}
 
@@ -89,9 +91,6 @@ int main(){
 			return 0;
 		}
 	}
-
-
-	for (int i = 0; i < n; ++i)
-		cout << flow[i] << endl;
+	for (int i = 0; i < n; ++i)	cout << flow[i] << endl;
 	return 0;
 }
