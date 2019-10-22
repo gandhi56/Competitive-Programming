@@ -12,15 +12,9 @@ int main(){
 	cin >> x;
 
 	ull count = 0;
-	for (ull d = 2; d*d<=x; ++d){
-		while (x%d == 0){
-			x /= d;
+	for (ull d = 1; d < x; ++d){
+		if (x % d == 0)
 			count++;
-		}
-	}
-
-	if (x > 1){
-		count++;
 	}
 
 	cout << count << endl;
