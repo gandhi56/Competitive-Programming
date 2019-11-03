@@ -5,18 +5,20 @@
 #include <limits>
 #include <queue>
 
-#define MAXN 30;
+#define MAXN 30
 #define MAXC 26
 #define MAXCOST 100000
 #define INF 1000000000
 
 using namespace std;
 
+typedef long long ll;
 struct FlowEdge{
 	FlowEdge():	dst(0), src(0), cap(0), flow(0){}
-	FlowEdge(int src, int dst, int cap): src(src), dst(dst), cap(cap), flow(0)	{}
-	int dst, src, cap;
-	int flow;
+	FlowEdge(int src, int dst, ll cap): src(src), dst(dst), cap(cap), flow(0)	{}
+	int dst, src;
+	ll cap;
+	ll flow;
 	FlowEdge* redge;
 };
 
@@ -32,7 +34,7 @@ struct FlowGraph{
 		graph.reserve(n);
 	}
 
-	void addEdge(int src, int dst, int cap){
+	void addEdge(int src, int dst, ll cap){
 		graph[src].push_back(FlowEdge(src, dst, cap));
 		FlowEdge* e1 = &graph[src].back();
 		graph[dst].push_back(FlowEdge(dst, src, 0));
@@ -43,7 +45,7 @@ struct FlowGraph{
 	AdjFlowGraph graph;
 };
 
-int edmondsKarp(FlowGraph& FG, int source, int sink){
+ll edmondsKarp(FlowGraph& FG, int source, int sink){
 	while(1){
 		queue<int> visitQueue;
 		vector<bool> visited(FG.graph.size(), false);
@@ -54,7 +56,7 @@ int edmondsKarp(FlowGraph& FG, int source, int sink){
 
 		while (1){
 			if (visitQueue.empty()){
-				int flow = 0;
+				ll flow = 0;
 				for (ConstEdgeIterator it = FG.graph[source].begin(); it != FG.graph[source].end(); ++it){
 					flow += it->flow;
 				}
@@ -75,7 +77,7 @@ int edmondsKarp(FlowGraph& FG, int source, int sink){
 			}
 		}
 
-		int capacity = numeric_limits<int>::max();
+		ll capacity = numeric_limits<ll>::max();
 		for (int loc = cur; loc != source; loc = pathTo[loc]->src){
 			capacity = min(pathTo[loc]->cap - pathTo[loc]->flow, capacity);
 		}
@@ -86,6 +88,7 @@ int edmondsKarp(FlowGraph& FG, int source, int sink){
 		}
 	}
 }
+
 
 int main(){
 /*
@@ -125,9 +128,15 @@ int main(){
 	int n, m, c;
 	cin >> n >> m >> c;
 
-	string grid[n];
-	int cost[c];
-	for (int i= 0; i < n; ++i)	cin >> grid[i];
+	char grid[m][n];
+	ll cost[c];
+	for (int i = 0; i < m; ++i){
+		for (int j = 0; j < n; ++j){
+			cin >> grid[i][j];
+		}
+	}
+
+
 	for (int i = 0; i < c; ++i)	cin >> cost[i];
 
 	int source = -1;
@@ -162,26 +171,12 @@ int main(){
 		}
 	}
 
-
-	cout << edmondsKarp(fg, source, sink) << endl;
+    ll flow = edmondsKarp(fg, source, sink);
+    if (flow < INF){
+        cout << flow << endl; 
+    }
+    else{
+        cout << -1 << endl; 
+    }
 	return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

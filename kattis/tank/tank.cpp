@@ -10,7 +10,7 @@ double cross(const point& a, const point& b){	return imag(conj(a)*b);		}
 
 double area(vector<point>& p){
 	double area = 0.0;
-	for (int i = p.size() - 1, j = 0; j < p.size(); i = j++)
+	for (uint16_t i = p.size() - 1, j = 0; j < p.size(); i = j++)
 		area += cross(p[i], p[j]) / 2.0;
 	return area;
 }
@@ -63,7 +63,7 @@ int main(){
 		mid = (lo + hi) / 2.0;
 		// intersection between y = mid and poly
 		dd ip;
-		for (int i = 0;  i < poly.size(); ++i){
+		for (uint16_t i = 0;  i < poly.size(); ++i){
 			point c = poly[i];
 			point d = poly[(i+1) % poly.size()];
 			//int res = intersect_line(point(-2000.0, mid), point(2000.0, mid), c, d, ip);

@@ -54,13 +54,11 @@ int main(){
 
 	for (int i = 0; i < n; ++i){
 		ll whash = getHash(words[i], 0, words[i].length() - 1);
-
-		ll memo;
-
 		for (int j = 0; j < words[i].length(); ++j){
 
 			// get hash for s[]
 			ll del = ((words[i][j] - 'a' + 1) * ppow[j]) % m;
+            ll aa = 0;
 
 			if (_words.find(whash % m) != _words.end()){
 				ans.push_back(words[i]);

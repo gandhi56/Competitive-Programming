@@ -18,7 +18,6 @@ int main(){
 			cnt[0]++;
 	}
 
-
 	for (int i = 1; i < n; ++i){
 		cnt[i] = cnt[i-1];
 		if (s[i-1] == 'Z')		cnt[i]--;
