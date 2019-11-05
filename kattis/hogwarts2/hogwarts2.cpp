@@ -1,102 +1,76 @@
-#define FOO
 #include <bits/stdc++.h>
 using namespace std;
 
-int n;
 typedef pair<int,int> ii;
-typedef vector< vector< int > > graph;
-
-void print_graph(graph& g){
-	for (int i = 0; i < g.size(); ++i){
-		cout << i << " -> ";
-		for (auto v : g[i]){
-			cout << v << " ";
-		}
-		cout << endl;
-	}
-	cout << endl;
-}
+typedef vector< vector<int> > graph;
 
 int main(){
+	int n;
 	cin >> n;
 
-	graph g(n);
-	graph h(n);
-
-	// senior students graph
-	for (int i = 0; i < n; ++i){
-		int a, b, c, d;
-		cin >> a >> b >> c >> d;
-		--a; --b; --c; --d;
-		if (a >= 0)	g[i].push_back(a);
-		if (b >= 0)	g[i].push_back(b);
-		if (c >= 0)	g[i].push_back(c);
-		if (d >= 0)	g[i].push_back(d);
-	}
+	graph g, h;
+	g.push_back({0,0,0,0});
+	h.push_back({0,0,0,0});
 
 	for (int i = 0; i < n; ++i){
-		int a, b, c, d;
-		cin >> a >> b >> c >> d;
-		--a; --b; --c; --d;
-		if (a >= 0)	h[i].push_back(a);
-		if (b >= 0)	h[i].push_back(b);
-		if (c >= 0)	h[i].push_back(c);
-		if (d >= 0)	h[i].push_back(d);
+		vector<int> adj(4);
+		for (auto& x : adj)	cin >> x;
+		g.push_back(adj);
 	}
-
-	print_graph(g);
-	print_graph(h);
-
-	int distg[n];
-	int disth[n];
 	for (int i = 0; i < n; ++i){
-		distg[i] = -1;
-		disth[i] = -1;
+		vector<int> adj(4);
+		for (auto& x : adj)	cin >> x;
+		h.push_back(adj);
 	}
 
-	queue<ii> q;
-	q.push({0,0});
-
-	distg[0] = 0;
-	disth[0] = 0;
-
-	while (!q.empty()){
-		ii curr = q.front(); q.pop();
-		#ifdef FOO
-			cout << "curr = (" << curr.first << ", " << curr.second << ")" << endl;
-		#endif
-		if (curr.first == n-1 and curr.second != n-1){
-			cout << "No" << endl;
-			return 0;
-		}
-
-		/*
-		for (auto& next : g[curr.first]){
-			if (dist[{next, curr.second}] >= 0)	continue;
-			dist[{next,curr.second}] = currdist + 1;
-			q.push({next, curr.second});
-		}
-		for (auto& next : h[curr.second]){
-			if (dist[{curr.first, next}] >= 0)	continue;
-			dist[{curr.first, next}] = currdist+1;
-			q.push({curr.first, next});
-		}
-		*/
-
-		for (auto& next1 : g[curr.first]){
-			for (auto& next2 : h[curr.second]){
-				if (distg[next1] >= 0 or disth[next2] >= 0)	continue;
-				distg[next1] = distg[curr.first] + 1;
-				disth[next2] = disth[curr.second] + 1;
-				q.push({next1,next2});
+	/*
+	map<ii, vector<ii>> gh;
+	for (int k = 0; k < 4; ++k){
+		for (int i = 0; i <= n; ++i){
+			for (int j = 0; j <= n; ++j){
+				gh[{i,j}].push_back({g[i][k], h[j][k]});
 			}
 		}
 	}
+	*/
 
-	cout << "distg[n-1] = " << distg[n-1] << endl;
-	cout << "disth[n-1] = " << disth[n-1] << endl;
+	map<ii, bool> visited;
+	for (int i = 0; i <= n; ++i){
+		for (int j =0 ; j <= n; ++j){
+			visited[{i,j}] = false;
+		}
+	}
+	
+	queue<ii> q;
+	q.push({1,1});
+	while (!q.empty()){
+		ii curr = q.front(); q.pop();
+		if (visited[curr])	continue;
+		visited[curr] = true;
 
-	if (distg[n-1] == disth[n-1]){
+		for (int k = 0; k < 4; ++k){
+			q.push({g[curr.first][k], h[curr.second][k]});
+		}
+
+		/*
+		for (auto& next : gh[curr]){
+			q.push(next);
+		}
+		*/
+	}
+
+	bool in1 = false, in2 = true;
+	for (int i = 0; i <= n; ++i){
+		if (visited[{n,i}])	in1 = true;
+	}
+	for (int i = 0; i < n; ++i){
+		if (visited[{n,i}])	in2 = false;
+	}
+
+	if (!in1){
+		cout << "Impossible" << endl;
+	}
+	else if (in2){
 		cout << "Yes" << endl;
 	}
 	else{
