@@ -28,6 +28,7 @@ int main(){
             pool.push_back({e, g});
         }
         else{
+            sort(pool.begin(), pool.end());
             int x;
             cin >> x;
 
@@ -44,7 +45,6 @@ int main(){
 				//	}
 				//}
 
-            	sort(pool.begin(), pool.end());
 
 				int lo = 0;
 				int hi = pool.size()-1;

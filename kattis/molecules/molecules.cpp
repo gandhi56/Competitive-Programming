@@ -57,21 +57,124 @@ int main(){
 		if (x[i] == -1)	unknowns++;
 	}
 
-	vector< vector<int> > g(n);
+	bool adj[n][n];
+	memset(adj, 0, sizeof(adj));
 	for (int i =0 ; i < m; ++i){
 		int a, b;
 		cin >> a >> b;
-		g[a].push_back(b);
-		g[b].push_back(a);
+		adj[--a][--b] = true;
+		adj[b][a] = true;
+	}
+
+	// brute force
+	for (int i = 0; i < n; ++i){
+		if (x[i] != -1)	continue;
+		bool all = true;
+		double xtot = 0.0;
+		double ytot = 0.0;
+		int cnt = 0;
+		for (int j = 0; j < n; ++j){
+			if (i==j)	continue;
+			if (adj[i][j]){
+				if (x[j] == -1){
+					all = false;
+					break;
+				}
+				else{
+					xtot += x[j];
+					ytot += y[j];
+					cnt++;
+				}
+			}
+		}
+		if (all){
+			x[i] = xtot/cnt;
+			y[i] = ytot/cnt;
+		}
 	}
 
 	// solve for x coordinates
-	unordered_map< int, vector<double> > a(unknowns);
+	vector< vector<double> > a(n);
 	for (int i = 0; i < n; ++i){
-		if (x[i] != -1)	continue;
-		// point i has an unknown location
-		
+		if (x[i] == -1){
+			double val = 0;
+			for (int j = 0; j < n; ++j){
+				if (i == j){
+					a[i].push_back(2);
+				}
+				else if (adj[i][j]){
+					if (x[j] == -1){
+						a[i].push_back(-1);
+					}
+					else{
+						a[i].push_back(0);
+						val += x[j];
+					}
+				}
+				else{
+					a[i].push_back(0);
+				}
+			}
+			a[i].push_back(val);
+		}
+		else{
+			// x[i] is known, set a[i][i] to 1 and b[i] = x[i]
+			for (int j = 0; j < n; ++j){
+				a[i].push_back(0);
+			}
+			a[i][i] = 1;
+			a[i].push_back(x[i]);
+		}
 	}
 
+	vector<double> xx(n);
+	gauss(a, xx);
+	for (int i =0 ; i < n; ++i){
+		x[i] = xx[i];
+	}
+
+	// solve for y coordinates
+	vector< vector<double> > b(n);
+	for (int i = 0; i < n; ++i){
+		if (y[i] == -1){
+			double val = 0;
+			for (int j = 0; j < n; ++j){
+				if (i == j){
+					b[i].push_back(2);
+				}
+				else if (adj[i][j]){
+					if (y[j] == -1){
+						b[i].push_back(-1);
+					}
+					else{
+						b[i].push_back(0);
+						val += y[j];
+					}
+				}
+				else{
+					b[i].push_back(0);
+				}
+			}
+			b[i].push_back(val);
+		}
+		else{
+			// y[i] is known, set a[i][i] to 1 and b[i] = y[i]
+			for (int j = 0; j < n; ++j){
+				b[i].push_back(0);
+			}
+			b[i][i] = 1;
+			b[i].push_back(y[i]);
+		}
+	}
+
+	vector<double> yy(n);
+	gauss(b, yy);
+	for (int i =0 ; i < n; ++i){
+		y[i] = yy[i];
+	}
+
+	for (int i = 0; i < n; ++i){
+		cout << x[i] << ' ' << y[i] << endl;
+	}
 	return 0;
 }
