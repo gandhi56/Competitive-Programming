@@ -51,10 +51,12 @@ int main(){
 	int n, m;
 	cin >> n >> m;
 	double x[n], y[n];
+	int deg[n];
 	int unknowns = 0;
 	for (int i = 0; i < n; ++i){
 		cin >> x[i] >> y[i];
 		if (x[i] == -1)	unknowns++;
+		deg[i] = 0;
 	}
 
 	bool adj[n][n];
@@ -64,6 +66,8 @@ int main(){
 		cin >> a >> b;
 		adj[--a][--b] = true;
 		adj[b][a] = true;
+		deg[a]++;
+		deg[b]++;
 	}
 
 	// brute force
@@ -100,7 +104,7 @@ int main(){
 			double val = 0;
 			for (int j = 0; j < n; ++j){
 				if (i == j){
-					a[i].push_back(2);
+					a[i].push_back(deg[i]);
 				}
 				else if (adj[i][j]){
 					if (x[j] == -1){
