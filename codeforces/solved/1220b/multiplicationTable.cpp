@@ -19,10 +19,10 @@ int main(){
 		a[i] = sqrt( m[i][j]*m[i][k]/m[j][k] );
 	}
 	j = 0;
-	k = 2;
-	a[n-2] = sqrt( m[n-2][j]*m[n-2][k]/m[j][k] );
-	k = 1;
-	a[n-1] = sqrt( m[n-1][j]*m[n-1][k]/m[j][k] );
+	k = 0;
+	a[n-2] = sqrt( m[n-2][j]*m[n-2][k]/(a[0]*a[0]) );
+	k = 0;
+	a[n-1] = sqrt( m[n-1][j]*m[n-1][k]/(a[0]*a[0]) );
 
 	for (int i =0; i < n; ++i)	cout << a[i] << ' ';
 
