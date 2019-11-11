@@ -1,3 +1,4 @@
+* The Sock Pile
 * Kattis' quest		: 	TLE
 * Tank				:	Wrong Answer
 * coprime integers
