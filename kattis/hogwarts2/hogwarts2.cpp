@@ -22,18 +22,7 @@ int main(){
 		for (auto& x : adj)	cin >> x;
 		h.push_back(adj);
 	}
-
-	/*
-	map<ii, vector<ii>> gh;
-	for (int k = 0; k < 4; ++k){
-		for (int i = 0; i <= n; ++i){
-			for (int j = 0; j <= n; ++j){
-				gh[{i,j}].push_back({g[i][k], h[j][k]});
-			}
-		}
-	}
-	*/
-
+	
 	map<ii, bool> visited;
 	for (int i = 0; i <= n; ++i){
 		for (int j =0 ; j <= n; ++j){
@@ -47,24 +36,25 @@ int main(){
 		ii curr = q.front(); q.pop();
 		if (visited[curr])	continue;
 		visited[curr] = true;
-
 		for (int k = 0; k < 4; ++k){
 			q.push({g[curr.first][k], h[curr.second][k]});
 		}
-
-		/*
-		for (auto& next : gh[curr]){
-			q.push(next);
-		}
-		*/
 	}
 
 	bool in1 = false, in2 = true;
 	for (int i = 0; i <= n; ++i){
-		if (visited[{n,i}])	in1 = true;
+		if (visited[{n,i}]){
+			in1 = true;
+			break;
+		}
 	}
+
+	// if senior student reached before the new student does
 	for (int i = 0; i < n; ++i){
-		if (visited[{n,i}])	in2 = false;
+		if (visited[{n,i}]){
+			in2 = false;
+			break;
+		}
 	}
 
 	if (!in1){
