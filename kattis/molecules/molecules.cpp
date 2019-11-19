@@ -70,33 +70,6 @@ int main(){
 		deg[b]++;
 	}
 
-	// brute force
-	for (int i = 0; i < n; ++i){
-		if (x[i] != -1)	continue;
-		bool all = true;
-		double xtot = 0.0;
-		double ytot = 0.0;
-		int cnt = 0;
-		for (int j = 0; j < n; ++j){
-			if (i==j)	continue;
-			if (adj[i][j]){
-				if (x[j] == -1){
-					all = false;
-					break;
-				}
-				else{
-					xtot += x[j];
-					ytot += y[j];
-					cnt++;
-				}
-			}
-		}
-		if (all){
-			x[i] = xtot/cnt;
-			y[i] = ytot/cnt;
-		}
-	}
-
 	// solve for x coordinates
 	vector< vector<double> > a(n);
 	for (int i = 0; i < n; ++i){
@@ -137,6 +110,7 @@ int main(){
 		x[i] = xx[i];
 	}
 
+
 	// solve for y coordinates
 	vector< vector<double> > b(n);
 	for (int i = 0; i < n; ++i){
@@ -144,7 +118,7 @@ int main(){
 			double val = 0;
 			for (int j = 0; j < n; ++j){
 				if (i == j){
-					b[i].push_back(2);
+					b[i].push_back(deg[i]);
 				}
 				else if (adj[i][j]){
 					if (y[j] == -1){
@@ -162,7 +136,7 @@ int main(){
 			b[i].push_back(val);
 		}
 		else{
-			// y[i] is known, set a[i][i] to 1 and b[i] = y[i]
+			// x[i] is known, set a[i][i] to 1 and b[i] = x[i]
 			for (int j = 0; j < n; ++j){
 				b[i].push_back(0);
 			}
