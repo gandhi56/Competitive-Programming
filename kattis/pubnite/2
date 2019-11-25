@@ -1,0 +1,34 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef complex<double> point;
+
+double sq(double x){
+	return x*x;
+}
+
+int main(){
+	double xs, ys, ss, ri, rf;
+	cin >> xs >> ys >> ss >> ri >> rf;
+
+	double xa, ya, sa;
+	cin >> xa >> ya >> sa;
+
+	double theta = atan(fabs(ya-ys)/fabs(xa-xs));
+	double dx = sa * cos(theta);
+	double dy = sa * sin(theta);
+
+	double d = 0.0;
+	while (ri > rf){
+		if ( sq(xa - xs) + sq(ya - ys) > sq(ri))	d += 1.0;
+		xa += dx;
+		ya += dy;
+		ri -= ss;
+	}
+
+	cout.set(ios::fixed);
+	cout.precision(6);
+	cout << d << endl;
+
+	return 0;
+}

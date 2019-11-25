@@ -1,77 +1,63 @@
-
-#define MAXN 1000000
 #include <bits/stdc++.h>
 using namespace std;
 
 typedef long long ll;
 
-const int p = 31;
-const int m = 1e9 + 9;
-ll ppow[MAXN];
+const ll MOD = 0x7fffffff;
+const ll x = 123456;
+const ll xinv = 1473977140;
 
-ll getHash(string& s, int i, int j){
-	ll value = 0;
-	ll ppow = 1;
-	for (int k = i; k <= j; ++k){
-		value = (value + (s[k] - 'a' + 1) * ppow) % m;
-		ppow = (ppow * p) % m;
+vector<string> dict;
+unordered_map<ll, vector<ll>> hashes;
+
+ll gethash(string& s){
+	ll h = 0;
+	for (char c : s)	h = (h*x + c) % MOD;
+	return h;
+}
+
+bool hit(ll h1, string& s, int i){
+	// brute force
+	if (hashes.find(h1) == hashes.end())	return false;
+	for (int j : hashes[h1]){
+		if (s.substr(0,i) + s.substr(i+1, s.length()) == dict[j])
+			return true;
 	}
-	return value % m;
-}
-
-string getNewWord(string s, int i){
-	if (i == 0)
-		return s.substr(1, s.length() - 1);
-	return s.substr(0, i) + s.substr(i+1, s.length()-i-1);
-}
-
-void fast(){
-	ios_base::sync_with_stdio(0);
-	cin.tie(NULL);
+	return false;
 }
 
 int main(){
-
-	// precompute powers of p
-	ll pp = 1 % m;
-	for (int i = 0; i < MAXN; ++i){
-		ppow[i] = pp;
-		pp = (pp * p) % m;
-	}
-
 	int n;
 	cin >> n;
 
-	set<ll> _words;
-	string words[n];
-	vector<string> ans;
-	for (int i = 0;  i < n; ++i){
-		cin >> words[i];
-		//cout << words[i] << " " << getHash(words[i], 0, words[i].length() - 1) << endl;
-		_words.insert(getHash(words[i], 0, words[i].length()-1));
-	}
-	
-
+	dict.resize(n);
 	for (int i = 0; i < n; ++i){
-		ll whash = getHash(words[i], 0, words[i].length() - 1);
-		for (int j = 0; j < words[i].length(); ++j){
+		cin >> dict[i];
+		hashes[gethash(dict[i])].push_back(i);
+	}
 
-			// get hash for s[]
-			ll del = ((words[i][j] - 'a' + 1) * ppow[j]) % m;
-            ll aa = 0;
+	bool typo = false;
+	for (string& s : dict){
+		ll h = gethash(s);
+		ll partial = 0;
+		ll xp = 1;
 
-			if (_words.find(whash % m) != _words.end()){
-				ans.push_back(words[i]);
+		for (int i = s.length()-1; i >= 0; --i){
+			ll nextpartial = (partial + s[i]*xp) % MOD;
+			ll h1 = (h - nextpartial + MOD) % MOD;
+			h1 = (h1 * xinv + partial) % MOD;
+			if (hit(h1, s, i)){
+				cout << s << endl;
+				typo = true;
 				break;
 			}
+
+			partial = nextpartial;
+			xp = (xp * x) % MOD;
 		}
 	}
 
-	for (auto& ss : ans)
-		cout << ss << endl;
-
-	if (ans.size() == 0)
-		cout << "NO TYPOS" << endl;
+	if (!typo)	cout << "NO TYPOS" << endl;
 
 	return 0;
 }

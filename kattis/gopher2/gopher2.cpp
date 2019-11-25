@@ -44,6 +44,10 @@ struct FlowGraph {
 
 int EdmondsKarp(FlowGraph& FG, int source, int sink){
 	while (1) {
+
+		pair<int,int> par = {0, 0};
+		auto& [xx, yy] = par;
+		
 		queue<int> visitQueue;
 		vector<bool> visited(FG.graph.size(), false);
 		vector<FlowEdge *> pathTo(FG.graph.size(), NULL);
@@ -62,6 +66,7 @@ int EdmondsKarp(FlowGraph& FG, int source, int sink){
 				}
 				return flow;
 			}
+
 			cur = visitQueue.front();
 			visitQueue.pop();
 			if (cur == sink) break;
