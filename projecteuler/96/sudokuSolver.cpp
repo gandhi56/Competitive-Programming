@@ -99,14 +99,15 @@ int main(){
 		}
 
 		solve();
-		//show();
-
+		show();
+		cout << endl;
 
 		int n = (grid[0][0] - '0')*100 + (grid[0][1] - '0')*10 + (grid[0][2] - '0');
 		tot += n;
-		if (num == 50)	break;
+		if (num == 51)	break;
 
 	}
+		show();
 	cout << tot << endl;
 
 	return 0;
