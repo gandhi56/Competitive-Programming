@@ -1,7 +1,6 @@
 
 #define MAXN  100010
 #define K     16
-
 #include <iostream>
 
 using namespace std;
