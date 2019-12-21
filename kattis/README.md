@@ -1,4 +1,3 @@
-* basicremains
 * spam
 * PUBNite	: 	How does Anthony move?
 * Name That Permutation	: algorithm?
