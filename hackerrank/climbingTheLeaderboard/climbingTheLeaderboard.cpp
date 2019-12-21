@@ -1,37 +1,22 @@
 #include <bits/stdc++.h>
 using namespace std;
+typedef pair<int,int> ii;
 
-int bsearch(vector<int>& scores, int x){
-  int lo = 0;
-  int hi = scores.size() - 1;
-  int mid;
-  if (x < scores.back())  return scores.size() + 1;
-  while (lo <= hi){
-    mid = (lo + hi) / 2;
-    if (scores[mid] == x or (scores[mid+1] > x and scores[mid] < x))  break;
-    if (scores[mid] > x){
-      lo = mid + 1;
-    }
-    else if (scores[mid] < x){
-      hi = mid - 1;
-    }
-    else{
-      break;
-    }
-  }
-  return mid+1;
+bool comp(ii a, ii b){
+  return a.first > b.first;
 }
 
 int main(){
   int n;
   cin >> n;
-  vector<int> scores;
+
+  vector<ii> scores;
+  int rk = 1;
   while (n--){
     int x;
     cin >> x;
-    if (scores.size() and scores.back() == x)
-      continue;
-    scores.push_back(x);
+    if (scores.size() and scores.back().first == x) continue;
+    scores.push_back({x, rk++});
   }
 
   int m;
@@ -39,7 +24,10 @@ int main(){
   while (m--){
     int x;
     cin >> x;
-    cout << bsearch(scores, x) << endl;
+
+    auto it = lower_bound(scores.begin(), scores.end(), make_pair(x, -1), comp);
+    cout << (it == scores.end()? scores.size()+1 : it->second) << endl;
+
   }
 
   return 0;
