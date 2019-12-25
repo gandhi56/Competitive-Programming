@@ -16,6 +16,11 @@ int main(){
             poolmap[e].push(g); // logn
         }
         else{
+            // - find the largest energy quest from the current pool which 
+            // is smaller or equal to x
+            // - clear the quest, removing it from the current pool. 
+            // reduce energy of the quest and add up the gold reward earned
+            // repeat
             int x, g = 0;
 			scanf("%d", &x);
             while (x and !poolmap.empty()){
