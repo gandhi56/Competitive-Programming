@@ -4,21 +4,29 @@ int main(){
   int n;
   cin >> n;
 
-  unordered_map<string, int> tk;
+  vector<unsigned int> tk(n);
 
+  int idx = 0;
   while (n--){
     string s;
     cin >> s;
-    tk[s] = 0;
-    for (auto c : s){
-      tk[s] |= (1<<(int)(c - '0'))
-      if (tk[s] == 1023)  break;
+    tk[idx] = 0;
+    for (char c : s){
+      tk[idx] |= (1<<(c - '0'));
     }
+    //cout << tk[idx] << endl;
+    idx++;
   }
 
   int cnt = 0;
-  for (auto it1 = tk.begin(); it1 != tk.end(); ++it){
+  for (int i = 0; i < tk.size(); ++i){
+    for (int j = i+1; j < tk.size(); ++j){
+      if ((unsigned int)(tk[i]|tk[j]) == 1023){
+        cnt++;
+        //cout << i << ' ' << j << endl;
+      }
+    }
   }
-
+  cout << cnt << endl;
   return 0;
 }
