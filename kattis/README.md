@@ -1,3 +1,6 @@
+* birthdayboy: Wrong answer, annoying edge case with dates
+* firestation: TLE
+* waif : network flow, how to construct the network?
 * equationsolverplus
 * spam
 * Name That Permutation	: algorithm?
