@@ -82,10 +82,10 @@ int main(){
   }
 
   // tie
-  for (idx = 0; idx < n; ++idx){
-    if (mtd(10, 28) < date[idx]) break;
+  for (idx = 0; idx < n-1; ++idx){
+    if (mtd(10, 28) <= date[idx+1]-1 and date[idx+1] - date[idx] == longestGap) break;
   }
-  print_date(dtm(date[(idx)%n]-1));
+  print_date(dtm(date[(idx+1)%n]-1));
 
   return 0;
 }

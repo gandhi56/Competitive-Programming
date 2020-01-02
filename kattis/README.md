@@ -1,4 +1,3 @@
-* birthdayboy: Wrong answer, error in tie breaking
 * firestation: TLE
 * waif : network flow, how to construct the network?
 * equationsolverplus
