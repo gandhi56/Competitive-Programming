@@ -1,75 +1,46 @@
+#define MAXN 510
 #define INF 0x3f3f3f3f
 #include <bits/stdc++.h>
 using namespace std;
 
-typedef pair<int,int> ii;
-typedef vector< vector<ii> > graph;
+int f, i;
+int g[MAXN][MAXN];
+bool hasFireStn[MAXN];
 
-ii near_fire_stn(graph& g, int s, bool* hasFireStn){
-  int dist[g.size()];
-  memset(dist, INF, sizeof(dist));
-  priority_queue<ii, vector<ii>, greater<ii>> pq;
-  pq.push({0,s});
-  int u, currDist;
-  while (!pq.empty()){
-    tie(currDist, u) = pq.top(); pq.pop();
-    if (currDist >= dist[u])  continue;
-    dist[u] = currDist;
-    if (hasFireStn[u]) return {dist[u], u};
-    for (auto next : g[u]){
-      if (dist[u] + next.first <= dist[next.second])
-        pq.push({dist[u] + next.first, next.second});
+void floydWarshall(){
+  for (int w = 1; w <= i; ++w){
+    for (int u = 1; u <= i; ++u){
+      for (int v = 1; v <= i; ++v){
+        g[u][v] = min(g[u][v], g[u][w] + g[w][v]);
+      }
     }
   }
-  return {INF, INF};
-}
-
-
-
-int max_dist_inter(graph& g, int s, bool* hasFireStn){
-  int dist[g.size()];
-  memset(dist, INF, sizeof(dist));
-  priority_queue<ii, vector<ii>, greater<ii>> pq;
-  pq.push({0,s});
-  int u, currDist;
-  while (!pq.empty()){
-    tie(currDist, u) = pq.top(); pq.pop();
-    if (currDist >= dist[u])  continue;
-    dist[u] = currDist;
-    for (auto next : g[u]){
-      if (dist[u] + next.first <= dist[next.second])
-        pq.push({dist[u] + next.first, next.second});
-    }
-  }
-
-  int maxDist = -1;
-  for (int u = 0; u < g.size(); ++u){
-    if (hasFireStn[u]) continue;
-    maxDist = max(maxDist, dist[u]);
-  }
-  return maxDist;
 }
 
 int main(){
   ios_base::sync_with_stdio(0);
-  cin.tie(0);
+  cin.tie(NULL);
+
   int t;
   cin >> t;
 
   while (t--){
-    int f, i; // # firestations, # intersections
     cin >> f >> i;
-
-    bool hasFireStn[i];
     memset(hasFireStn, false, sizeof(hasFireStn));
 
-    while (f--){
-      int x;
-      cin >> x;
-      hasFireStn[--x] = true;
+    // clear adj mat
+    for (int u = 0; u <= i; ++u){
+      for (int v = 0; v <= i; ++v){
+        g[u][v] = (u==v? 0 : INF);
+      }
     }
 
-    graph g(i);
+    for (int k = 0; k < f; ++k){
+      int x;
+      cin >> x;
+      hasFireStn[x] = true;
+    }
+
     string line;
     getline(cin, line);
     while (getline(cin, line)){
@@ -77,33 +48,39 @@ int main(){
       stringstream ss(line);
       int u, v, w;
       ss >> u >> v >> w;
-      g[--u].push_back({w, --v});
-      g[v].push_back({w, u});
+      g[u][v] = w;
+      g[v][u] = w;
     }
 
-    /*
-    int nearfs[i];
-    for (int u = 0; u < i; ++u){
-      nearfs[u] = near_fire_stn(g, u, hasFireStn).first;
-    }
-    */
+    floydWarshall();
 
-    /*
-      * attempt 1: O(n^3 logn)
-      *
+    // find shortest distance between every intersection
+    // and its nearest fire station
+    int nfs[i+1];
+    for (int u = 1; u <= i; ++u){
+      if (hasFireStn[u]){
+        nfs[u] = 0;
+      }
+      else{
+        nfs[u] = INF;
+        for (int v = 1; v <= i; ++v){
+          if (u == v or !hasFireStn[v]) continue;
+          nfs[u] = min(nfs[u], g[u][v]);
+        }
+      }
+    }
+
     int ans = 1;
     int ansDist = INF;
     int maxDist;
-    for (int u = 0; u < i; ++u){
-      if (hasFireStn[u])  continue; 
+    for (int u = 1; u <= i; ++u){
+      if (hasFireStn[u])  continue;
       hasFireStn[u] = true;
-
-      // find the max distance between an intersection
-      // and its nearest fire station
-      maxDist = -1;
-      for (int v = 0; v < i; ++v){
-        int dist, nearfs;
-        tie(dist, nearfs) = near_fire_stn(g, v, hasFireStn);
+      maxDist = 0;
+      for (int v = 1; v <= i; ++v){
+        // find distance to the nearest firestation to v
+        int dist = nfs[v];
+        if (g[v][u] < dist) dist = g[v][u];
         maxDist = max(maxDist, dist);
       }
       if (maxDist < ansDist){
@@ -112,34 +89,8 @@ int main(){
       }
       hasFireStn[u] = false;
     }
-    cout << ++ans << endl;
 
-    *
-    */
-
-
-    /*
-     * attempt 2: O(n^2logn)
-     */
-
-    int ans = 1;
-    int ansDist = INF;
-    int maxDist;
-    for (int u = 0; u < i; ++u){
-      if (hasFireStn[u])  continue; 
-      hasFireStn[u] = true;
-      maxDist = 0;
-      for (int v = 0; v < i; ++v){
-        if (!hasFireStn[v]) continue;
-        maxDist = max(maxDist, max_dist_inter(g, v, hasFireStn));
-      }
-      if (maxDist < ansDist){
-        ansDist = maxDist;
-        ans = u;
-      }
-      hasFireStn[u] = false;
-    }
-    cout << ++ans << endl;
+    cout << ans << endl << endl;
   }
   return 0;
 }
