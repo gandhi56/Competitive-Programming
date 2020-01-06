@@ -1,7 +1,6 @@
 * waif : network flow, how to construct the network?
 * equationsolverplus
 * spam
-* Name That Permutation	: algorithm?
 * The Sock Pile
 * Kattis' quest		: 	TLE
 * Tank				:	Wrong Answer

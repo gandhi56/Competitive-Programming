@@ -1,15 +1,28 @@
 from sys import stdin
+from math import factorial as fact
 
-def rec_unrank_perm(n, k, r, idp, pi):
-    if k > 0:
-        idp[n-1], idp[r%n] = idp[r%n], idp[n-1]
-        idp, pi = rec_unrank_perm(n-1, k-1, r//n, idp, pi)
-        pi.append(idp[n-1])
-        idp[n-1], idp[r%n] = idp[r%n], idp[n-1]
-    return idp, pi
+vals = [0 for i in range(51)]
+idp = [i for i in range(1, 51)]
+ans = []
+
+def convert(curr, base):
+    if base < n+1:
+        vals[n - base] = curr % base
+        convert(curr // base, base+1)
+
+def solve(step, m):
+    if m != 0:
+        cnt, i = -1, -1
+        while cnt != vals[step]:
+            i += 1
+            if m&(1<<i):
+                cnt += 1
+        ans.append(str(idp[i]))
+        solve(step+1, m&~(1<<i))
 
 for line in stdin:
+    ans.clear()
     n, k = map(int, line.split())
-    idp = [i for i in range(n)]
-    pi = []
-    print(' '.join([str(i+1) for i in rec_unrank_perm(n, n, k-1, idp, pi)[1]]))
+    convert(k, 1)
+    solve(0, (1<<n)-1)
+    print(' '.join(ans))
