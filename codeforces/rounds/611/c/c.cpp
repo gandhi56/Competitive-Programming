@@ -2,41 +2,36 @@
 using namespace std;
 #define MAXN 1000000
 
-typedef vector< vector<int> > graph;
-
-int indeg[MAXN];
-int outdeg[MAXN];
-
 int main(){
 	int n;
-	cin >> n;
+  cin >> n;
 
-	memset(indeg, 0, sizeof(indeg));
-	memset(outdeg, 0, sizeof(outdeg));
+  bool used[n+1];
+  memset(used, false, sizeof(used));
 
-	graph g(n);
-	for (int i = 0; i < n; ++i){
-		int u;
-		cin >> u;
-		--u;
-		if (u >= 0){
-			g[i].push_back(u);
-			outdeg[i]++;
-			indeg[u]++;
-		}
-	}	
+  vector<int> pi;
+  for (int i = 0; i < n; ++i){
+    int x;
+    cin >> x;
+    pi.push_back(x);
+    used[x] = true;
+  }
 
-	// find a vertex with indeg 1 and outdeg 0
-	int s = 0;
-	for (; s < n; ++s){
-		if (indeg[s] == 1 and outdeg[s] == 0)	break;
-	}
+  for (int i = 0; i < n; ++i){
+    if (pi[i] != 0) continue;
+    int j;
+    for (j = 1; j <= n; ++j){
+      if (!used[j] and j != i) break;
+    }
+    pi[i] = j;
+    used[j] = true;
+  }
 
-	// if no such s exists, pick s with lowest val
-	s = 0;
-	while (indeg[s] == 1 and outdeg[s] == 1)	s++;
+  for (auto x : pi){
+    cout << x << ' ';
+  }
+  cout << endl;
 
-	cout << s << endl;
 
-	return 0;
+  return 0;
 }
