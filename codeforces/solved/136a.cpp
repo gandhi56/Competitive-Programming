@@ -8,12 +8,15 @@ typedef vector< vector<int> > vii;
 
 int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
-  int t;
-  cin >> t;
-  while (t--){
-    int a, b, c, d;
-    cin >> a >> b >> c >> d;
-    cout << a << ' ' << d << endl;
+  map<int,int> m;
+  int n;
+  cin >> n;
+  for (int i = 1; i <= n; ++i){
+    int x;
+    cin >> x;
+    m[x] = i;
   }
+  for (auto it : m) cout << it.second << ' ';
+  cout << endl;
   return 0;
 }
