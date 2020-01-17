@@ -23,7 +23,7 @@ int main(){
   int k;
   cin >> k;
   vii g(n);
-  int u, v;
+  int u, v, w;
   while (m--){
     cin >> u >> v;
     g[--u].push_back(--v);
@@ -39,21 +39,20 @@ int main(){
 
   vector<int> dist(n, -1);
   vector<int> par(n, -1);
-  queue<int> q;
-  int d = 0;
-  q.push(0);
+  queue<ii> q;
+  q.push({0,-1}); // curr, prev
   cout << "done" << endl;
   while (!q.empty()){
-    u = q.front(); q.pop();
-    if (dist[u] != -1)  continue;
-    dist[u] = d+1;
-    for (auto& v : g[u]){
-      // if (par[u], u, v) is forbidden, avoid it
-      if (s.find(trip(par[u], u, v)) != s.end())  continue;
-      q.push(v);
-      par[v] = u;
+    tie(v, u)= q.front(); q.pop();
+    for (auto& w : g[u]){
+      if (dist[w] != -1)  continue;
+      dist[w] = dist[v] + 1;
+      par[w] = v;
+      //if (u != -1 and s.find(trip(u, v, w)) != s.end())  continue;
+      q.push({w, v});
     }
   }
+
   cout << dist[n-1] << endl;
 
   return 0;
