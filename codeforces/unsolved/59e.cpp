@@ -23,7 +23,7 @@ int main(){
   int k;
   cin >> k;
   vii g(n);
-  int u, v, w;
+  int u, v;
   while (m--){
     cin >> u >> v;
     g[--u].push_back(--v);
@@ -34,26 +34,44 @@ int main(){
   while (k--){
     int a, b, c;
     cin >> a >> b >> c;
+    --a; --b; --c;
     s.insert({a, b, c});
   }
-
-  vector<int> dist(n, -1);
-  vector<int> par(n, -1);
+  
   queue<ii> q;
-  q.push({0,-1}); // curr, prev
-  cout << "done" << endl;
+  vector<int> dist(n, -1), par(n, -1);
+  q.push({0, -1});
   while (!q.empty()){
-    tie(v, u)= q.front(); q.pop();
-    for (auto& w : g[u]){
+    tie(v, u) = q.front(); q.pop();
+    cout << u << ' ' << v << endl;
+    // curr : v
+    // prev : u
+    for (int w : g[v]){
       if (dist[w] != -1)  continue;
+      if (u != -1 and v != -1 and w != -1 and s.find({u, v, w}) != s.end()){
+        cout << "forbidden " << u << ' ' << v << ' ' << w << endl;
+        continue;
+      }
       dist[w] = dist[v] + 1;
       par[w] = v;
-      //if (u != -1 and s.find(trip(u, v, w)) != s.end())  continue;
       q.push({w, v});
     }
   }
 
+  if (dist[n-1] == -1){
+    cout << -1 << endl;
+    return 0;
+  }
   cout << dist[n-1] << endl;
-
+  vector<int> path;
+  for (u = n-1; u != -1; u = par[u])
+    path.push_back(u);
+  reverse(path.begin(), path.end());
+  
+  for (int i = 0; i < path.size(); ++i){
+    cout << path[i]+1 << ' ';
+  }
+  cout << endl;
+  
   return 0;
 }
