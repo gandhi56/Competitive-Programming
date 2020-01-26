@@ -1,76 +1,76 @@
 #define INF 0x3f3f3f3f
+#define pb(x) push_back(x)
+#define sz(x) (int)(x).size()
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
 typedef pair<int,int> ii;
 typedef pair<ll, ll> pii;
-typedef vector< vector<int> > vii;
+typedef vector<int> vi;
+typedef vector<bool> vb;
+typedef vector<vi> vii;
+typedef vector<vector<ii>> viii;
 
 struct trip{
   int a, b, c;
-  trip(int aa, int bb, int cc)  : a(aa), b(bb), c(cc) {} 
-};
+  trip(int aa, int bb, int cc): a(aa), b(bb), c(bb){}
 
-bool operator<(const trip& t1, const trip& t2){
-  return t1.a < t2.a;
-}
+  bool operator<(const trip& t) const {
+    return a < t.a;
+  }
+};
 
 int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
-  int n, m;
-  cin >> n >> m;
   
-  int k;
-  cin >> k;
-  vii g(n);
-  int u, v;
-  while (m--){
-    cin >> u >> v;
-    g[--u].push_back(--v);
-    g[v].push_back(u);
+  int n, m, k;
+  cin >> n >> m >> k;
+
+  vii g(n+1);
+
+  for (int i =0; i < m; ++i){
+    int x, y;
+    cin >> x >> y;
+    g[x].pb(y);
+    g[y].pb(x);
   }
 
-  set<trip> s;
-  while (k--){
+  set<trip> fb;
+  for (int i = 0; i < k; ++i){
     int a, b, c;
     cin >> a >> b >> c;
-    --a; --b; --c;
-    s.insert({a, b, c});
+    fb.insert(trip(a, b, c));
   }
-  
+
   queue<ii> q;
-  vector<int> dist(n, -1), par(n, -1);
-  q.push({0, -1});
+  vb seen(n+1, false);
+  vi par(n+1, -1);
+  q.push({0, 1});
+  int u, v;
   while (!q.empty()){
-    tie(v, u) = q.front(); q.pop();
-    cout << u << ' ' << v << endl;
-    // curr : v
-    // prev : u
-    for (int w : g[v]){
-      if (dist[w] != -1)  continue;
-      if (u != -1 and v != -1 and w != -1 and s.find({u, v, w}) != s.end()){
-        cout << "forbidden " << u << ' ' << v << ' ' << w << endl;
-        continue;
-      }
-      dist[w] = dist[v] + 1;
+    tie(u, v) = q.front(); q.pop();
+    for (auto w : g[v]){
+      if (seen[w])  continue;
+      if (fb.find(trip(u, v, w)) != fb.end()) continue;
+      seen[w] = true;
+      q.push({v, w});
       par[w] = v;
-      q.push({w, v});
     }
   }
 
-  if (dist[n-1] == -1){
+  if (!seen[n]){
     cout << -1 << endl;
     return 0;
   }
-  cout << dist[n-1] << endl;
-  vector<int> path;
-  for (u = n-1; u != -1; u = par[u])
-    path.push_back(u);
-  reverse(path.begin(), path.end());
-  
-  for (int i = 0; i < path.size(); ++i){
-    cout << path[i]+1 << ' ';
+
+  vi path;
+  for (u = n; par[u] != -1; u = par[u]){
+    path.pb(u);
   }
+
+  reverse(path.begin(), path.end());
+
+  for (auto x : path) cout << x << ' ';
   cout << endl;
   
   return 0;
