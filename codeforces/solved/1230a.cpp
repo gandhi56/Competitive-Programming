@@ -10,6 +10,12 @@ int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
   ll a[4];
   cin >> a[0] >> a[1] >> a[2] >> a[3];
-  cout << (a[0]+a[3]==a[1]+a[2] or a[0]+a[1]==a[2]+a[3] or a[0]+a[2]==a[1]+a[3]?"YES":"NO") << endl;
+  cout << (a[0]+a[3]==a[1]+a[2] or 
+            a[0]+a[1]==a[2]+a[3] or 
+            a[0]+a[2]==a[1]+a[3] or
+            a[3]+a[1]+a[2] == a[0] or
+            a[0]+a[3]+a[2] == a[1] or 
+            a[0]+a[1]+a[3] == a[2] or 
+            a[0]+a[1]+a[2] == a[3]?"YES":"NO") << endl;
   return 0;
 }
