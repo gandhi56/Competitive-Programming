@@ -11,22 +11,20 @@ typedef vector<bool> vb;
 typedef vector<vi> vii;
 typedef vector<vector<ii>> viii;
 
-int id;
+typedef map<string, vector<string>> graph;
 
-void dfs(map<string, vector<string>>& g, string x, map<string, bool>& seen, vector<string>& top){
-  seen[x] = true;
-  for (auto s : g[x]){
-    if (!seen[s]){
-      dfs(g, s, seen, top);
-    }
-  }
-  top.pb(x);
+void dfs(graph& g, string v, map<string, bool>& visited, vector<string>& ans){
+  visited[v] = true;
+  for (auto w : g[v])
+    if (!visited[w])
+      dfs(g, w, visited, ans);
+  ans.pb(v);
 }
 
 int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
     
-  map<string, vector<string>> g;
+  graph g;
   int n;
   cin >> n;
 
@@ -34,42 +32,39 @@ int main(){
     string inp;
     getline(cin, inp);
     string key, w;
+    if (inp == "\n")  continue;
     for (auto c : inp){
       if (c == ' '){
-        g[key].pb(w);
+        if (w.empty())  continue;
+        g[w].pb(key);
         w = "";
       }
       else if (c == ':'){
         key = w;
-        g.insert({key, vector<string>()});
         w = "";
       }
-      else{
+      else if (c != '\n'){
         w += c;
       }
     }
-    g[key].pb(w);
+    if (w.size())
+      g[w].pb(key);
   }
 
   string s;
   cin >> s;
 
   // toposort
-  map<string, bool> seen;
+  map<string, bool> visited;
   for (auto it = g.begin(); it != g.end(); ++it){
-    seen[it->first] = false;
+    visited[it->first] = false;
   }
 
-  vector<string> top;
-
-  id = n-1;
-  
-  for (auto it = g.begin(); it != g.end(); ++it){
-    if (!seen[it->first])
-      dfs(g, it->first, seen, top);
-  }
-
-  for (auto s : top)  cout << s << endl;
+  vector<string> ans;
+  dfs(g, s, visited, ans);
+  reverse(ans.begin(), ans.end());
+  for (auto s : ans)
+    cout << s << endl;
 
   return 0;
 }
