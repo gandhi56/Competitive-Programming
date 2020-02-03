@@ -13,16 +13,19 @@ typedef vector<vector<ii>> viii;
 
 int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
-  
-  int h;
-  cin >> h;
+  int x;
 
-  int x[h];
-  for (int i = 0; i < h; ++i) cin >> x[i];
-
-  sort(x, x+h);
-
-
-
+  unordered_map<int,int> m;
+  vector<int> v;
+  while (cin >> x){
+    v.pb(x);
+    m[x]++;
+  }
+  set<int> done;
+  for (auto x : v){
+    if (done.find(x) != done.end()) continue;
+    cout << x << ' ' << m[x] << endl;
+    done.insert(x);
+  }
   return 0;
 }

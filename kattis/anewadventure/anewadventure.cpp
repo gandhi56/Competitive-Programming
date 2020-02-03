@@ -13,5 +13,14 @@ typedef vector<vector<ii>> viii;
 
 int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
+  
+  int c, a;
+  cin >> c >> a;
+
+  vector<string> g(c);
+  for (auto& x : g) cin >> x;
+
+  ii pos = {1, 1};
+  
   return 0;
 }
