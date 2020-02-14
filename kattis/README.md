@@ -1,3 +1,4 @@
+* inspectingillumination
 * anewadventure
   state space search, BFS, let motorbikes be stationary and store the position of Gon in each state
 

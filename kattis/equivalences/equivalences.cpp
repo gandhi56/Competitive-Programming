@@ -1,93 +1,105 @@
-/*
-
-	- construct a condensation graph
-	- count the indeg of each scc
-	- return max(#sccs with indeg = 0, #sccs with outdeg = 0)
-	- if only one scc, output 0
-
-*/
-
-
-#include <iostream>
-#include <vector>
-#include <cstring>
+#define INF 0x3f3f3f3f
+#define pb(x) push_back(x)
+#define sz(x) (int)(x).size()
+#include <bits/stdc++.h>
 using namespace std;
+typedef long long ll;
+typedef pair<int,int> ii;
+typedef pair<ll, ll> pii;
+typedef vector<int> vi;
+typedef vector<bool> vb;
+typedef vector<vi> vii;
+typedef vector<vector<ii>> viii;
+#define MAXN 20001
 
-typedef vector< vector<int> > graph;
+int foundat = 1;
+vii g, scc;
+vi disc, low;
+bool onstack[MAXN];
 
-int n, m;
-bool used[20001];
-int comp[20001];
+void tarjan(int u){
+  foundat =  0;
+  stack<int> st;
+  disc[u] = low[u] = ++foundat;
+  st.push(u);
+  onstack[u] = true;
+  for (auto i : g[u]){
+    if (disc[i] == -1){
+      tarjan(i);
+      low[u] = min(low[u], low[i]);
+    }
+    else if (onstack[i]){
+      low[u] = min(low[u], disc[i]);
+    }
+  }
 
-void dfs1(graph& g, int u, vector<int>& order){
-	used[u] = true;
-	for (auto v : g[u]){
-		if (!used[v])	dfs1(g, v, order);
-	}
-	order.push_back(u);
-}
-
-void dfs2(graph& gr, int u, int C){
-	used[u] = true;
-	comp[u] = C;
-	cout << u << " ";
-	for (auto v : gr[u]){
-		if (!used[v])
-			dfs2(gr, v, C);
-	}
+  if (disc[u] == low[u]){
+    vi scctem;
+    while (1){
+      int v = st.top();st.pop();
+      onstack[v] = false;
+      scctem.pb(v);
+      if (u == v) break;
+    }
+    scc.pb(scctem);
+  }
 }
 
 int main(){
-	int t;
-	cin >> t;
+  ios_base::sync_with_stdio(0); cin.tie(0);  
+  int t;
+  cin >> t;
+  while (t--){
+    int n, m;
+    cin >> n >> m;
+    foundat = 0;
+    g.clear(); g.resize(n);
+    disc.clear(); disc.resize(n, -1);
+    low.clear(); low.resize(n, -1);
+    scc.clear();
+    memset(onstack, false, sizeof(onstack));
+    while (m--){
+      int u, v;
+      cin >> u >> v;
+      g[--u].pb(--v);
+    }
 
-	while (t--){
-		cin >> n >> m;
-		graph g(n+1);
-		graph gr(n+1);
-		for (int i = 0; i < m; ++i){
-			int u, v;
-			cin >> u >> v;
-			g[u].push_back(v);
-			g[v].push_back(u);
-		}
+    for (int i = 0; i < n; ++i){
+      if (disc[i] == -1)
+        tarjan(i);
+    }
 
-		vector<int> order;
-		memset(used, false, sizeof(used));
-		for (int u = 1; u <= n; ++u){
-			if (!used[u])	dfs1(g, u, order);
-		}
+    for (int u =0 ; u < sz(scc); ++u){
+      cout << u << ":";
+      for (auto v : scc[u]){
+        cout << v << ' ';
+      }
+      cout << endl;
+    }
 
-		int count = 0;
-		memset(used, false, sizeof(used));
-		memset(comp, 0, sizeof(comp));
-		int C = 1;
-		for (int i = order.size()-1; i >= 0; --i){
-			if (!used[order[i]]){
-				dfs2(gr, order[i], C);
-				count++;
-				C++;
-				cout << endl;
-			}
-		}
+    vi outdeg(sz(scc), 0);
+    vi indeg(sz(scc), 0);
+    for (int u = 0; u < sz(scc); ++u){
+      for (auto v : scc[u]){
+        outdeg[u]++;
+        indeg[v]++;
+      }
+    }
 
-		int indeg[C+1];
-		int outdeg[C+1];
-		memset(indeg, 0, sizeof(indeg));
-		memset(outdeg, 0, sizeof(outdeg));
-		for (int u = 1; u <= n; ++u){
-			for (auto v : g[u]){
-				indeg[comp[v]]++;
-				outdeg[comp[u]]++;
-			}
-		}
-		
-		for (int u = 1; u < C; ++u){
-			cout << u << " : " << indeg[u] << " " << outdeg[u] << endl;
-		}
-		cout << endl;
+    int cntIn = 0;
+    int cntOut = 0;
+    for (int u = 0; u < sz(scc); ++u){
+      if (indeg[u] == 0)  cntIn++;
+      if (outdeg[u] == 0)  cntOut++;
+    }
 
-	}
+    if (sz(scc) == 1){
+      cout << 0 << endl;
+    }
+    else{
+      cout << max(cntIn, cntOut) << endl;
+    }
 
-	return 0;
+  }
+  return 0;
 }

@@ -20,14 +20,14 @@ int main(){
     ll s;
     cin >> s;
   
-    ll spent = 10*(s/10);
-    ll gain = s/10;
-    ll rem = (s - spent + gain);
-    ll nxt = 10*(rem/10) + rem/10 + rem%10;
-    //cout << "spent = " << spent << endl;
-    //cout << "gain = " << gain << endl;
-    //cout << "rem = " << rem << endl;
-    cout << spent + nxt << endl;
+    ll ans = 0;
+    ll pw = 1000000000;
+    while (s){
+      while (s < pw)   pw /= 10;
+      ans += pw;
+      s -= pw - pw/10;
+    }
+    cout << ans << endl;
   
   }
   
