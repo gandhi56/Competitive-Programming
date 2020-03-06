@@ -42,10 +42,14 @@ int main(){
     auto x = pq.top(); pq.pop();
     int dist = x.first;
     ii currPos = x.second;
-    if (currPos.first == -1){
-      
-    }
+    
     int val = (currPos.first == -1 ? 0 : g[currPos.first][currPos.second]);
+    cout << val << endl;
+
+    if (val == k){
+      cout << dist << endl;
+      break;
+    }
 
     for (auto& nextPos : cells[val+1]){
       int wt = manDist(currPos, nextPos);
@@ -55,8 +59,6 @@ int main(){
       }
     }
   }
-
-  cout << "term" << endl;
 
   return 0;
 }
