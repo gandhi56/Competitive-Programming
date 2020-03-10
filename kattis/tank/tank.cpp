@@ -16,45 +16,53 @@ typedef complex<double> point;
 double cross(point a, point b)  {  return imag(conj(a) * b);  }
 double dot(point a, point b)  {  return real(conj(a) * b);  }
 
-int line_line_inter(point a, point b, point c, point d, point& p){
-  if (abs(cross(b-a, d-c)) > eps){
-    p = cross(c-a, d-c)/cross(b-a, d-c) * (b-a) + a;
-    return 1;
-  }
-  if (abs(cross(b-a, b-c)) > eps)
-    return 0;
-  return -1;
-}
-
-int seg_seg_intersect(point a, point b, point c, point d, point& p){
-  int s = line_line_inter(a, b, c, d, p);
-  if (s == 0) return 0;
-  if (s == -1){
-    if (dot(a-c, a-d) < eps){
-      p = a;
-      return 2;
-    }
-    if (dot(b-c, b-d) < eps){
-      p = b;
-      return 2;
-    }
-    if (dot(c-a, c-b) < eps){
-      p = c;
-      return 2;
-    }
-    return -1;
-  }
-  if (dot(p-a, p-b) < eps and dot(p-c, p-d) < eps)  return 1;
-  return -2;
-}
-
-double area(vector<point> p){
+double area(deque<point>& p){
   int n = sz(p);
   double a = 0.0;
   for (int i = n-1, j =0 ; j < n; i = j++){
-    a += cross(p[i], p[j]) / 2;
+    a += cross(p[i], p[j]);
   }
-  return a;
+  return abs(a) / 2;
+}
+
+point scale(point lo, point hi, double lvl){
+  double f = (lvl - lo.imag()) / (hi.imag() - lo.imag());
+  return point( f*(hi.real() - lo.real())+lo.real(), lvl );
+}
+
+bool get_value(deque<point>& poly, double y, double target){
+  deque<point> before, above, after;
+  bool mid = false;
+  for (auto p : poly){
+    if (p.imag() > y){
+      mid = true;
+      above.pb(p);
+    }
+    else{
+      if (!mid){
+        before.pb(p);
+      }
+      else{
+        after.pb(p);
+      }
+    }
+  }
+
+  point left = scale(after.front(), above.back(), y);
+  point right = scale(before.back(), above.front(), y);
+
+  deque<point> out;
+  for (int i = 0; i < before.size(); ++i){
+    out.pb(before[i]);
+  }
+
+  out.pb(right);
+  out.pb(left);
+
+  for (int i = 0; i < after.size(); ++i)
+    out.pb(after[i]);
+
+  return area(out) >= target;
 }
 
 int main(){
@@ -66,45 +74,38 @@ int main(){
   int d, l;
   cin >> d >> l;
 
-  vector<point> poly; // points in ccw order
-  double topY = 0.0;
-  vi bot;
-  vi top;
+  deque<point> poly;
+  double hi = -2100;
+  double lo = 2100;
   for (int i = 0; i < n; ++i){
     double x, y;
     cin >> x >> y;
     poly.pb(point(x, y));
-    topY = max(topY, y);
-    if (y == 0.0){
-      bot.pb(i);
+    hi = max(hi, y);
+    lo = min(lo, y);
+  }
+
+  // rotate
+  while (poly.front().imag() != 0 or poly.back().imag() != 0){
+    poly.push_back(poly.front());
+    poly.pop_front();
+  }
+
+  // binary search
+  double targ = (l*1000.0) / d;
+  while (abs(hi - lo) > eps){
+    double mid = (hi - lo) / 2 + lo;
+    if (get_value(poly, mid, targ)){
+      hi = mid;
+    }
+    else{
+      lo = mid;
     }
   }
 
-  for (int i = 0; i < n; ++i)
-    if (poly[i].imag() == topY)
-      top.pb(i);
-
-  double waterArea = l/d;
-
-  double lvl = 0.0;
-  double lo = 0.0;
-  double hi = topY;
-  while (lo <= hi){
-    lvl = (lo + hi) / 2.0;
-
-    // assume water level is up to lvl,
-    // compute area and adjust by
-    // comparing the areas
-    //
-    // y = lvl intersects with exactly
-    // two line segments
-    point p;
-
-    for (int i = 0; i+1 < n; ++i){
-      if (seg_seg_intersect(poly[i], poly[i+1], point()))
-        //TODO ----------------------
-    }
-  }
+  cout << fixed;
+  cout.precision(2);
+  cout << lo << endl;
 
   return 0;
 }
