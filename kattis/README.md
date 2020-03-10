@@ -1,3 +1,4 @@
+* turbo: Fenwick tree
 * inspectingillumination
 * anewadventure
   state space search, BFS, let motorbikes be stationary and store the position of Gon in each state
@@ -9,8 +10,6 @@
 * equationsolverplus
 * spam
 * The Sock Pile
-* Kattis' quest		: 	TLE
-* Tank				:	Wrong Answer
 * coprime integers
 * https://acpc18.kattis.com
 * https://rmc19.kattis.com
