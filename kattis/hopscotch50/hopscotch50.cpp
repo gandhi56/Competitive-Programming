@@ -11,54 +11,61 @@ typedef vector<bool> vb;
 typedef vector<vi> vii;
 typedef vector<vector<ii>> viii;
 
-int manDist(ii a, ii b){
+int n, k;
+int mat[52][52];
+viii pos;
+
+int getDist(ii a, ii b){
   return abs(a.first - b.first) + abs(a.second - b.second);
+}
+
+int dijkstra(int i, int j){
+  int dist[n][n];
+  memset(dist, INF, sizeof(dist));
+  dist[i][j] = 0;
+  priority_queue<pair<int, ii>, vector<pair<int, ii>>, greater<pair<int, ii>>> pq;
+  pq.push({0, {i, j}});
+  while (!pq.empty()){
+    auto edge = pq.top(); pq.pop();
+    ii curr = edge.second;
+    int nextVal = mat[curr.first][curr.second] + 1;
+    if (nextVal == k+1)
+      return edge.first;
+    for (auto next : pos[nextVal]){
+      int wt = getDist(curr, next);
+      if (dist[next.first][next.second] > dist[curr.first][curr.second] + wt){
+        dist[next.first][next.second] = dist[curr.first][curr.second] + wt;
+        pq.push(make_pair(dist[next.first][next.second], next));
+      }
+    }
+  }
+
+  return INF;
 }
 
 int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
   
-  int n, k;
   cin >> n >> k;
-  
 
-  int g[n][n];
-  vector< vector<ii> > cells(k+1);
-  int x;
+  pos.resize(k+1);
+  pos[0].push_back({-1, -1});
+  for (int i = 0; i < n; ++i){
+    for (int j = 0; j < n ;++j){
+      cin >> mat[i][j];
+      pos[mat[i][j]].push_back({i,j});
+    }
+  }
+
+  int ans = INF;
   for (int i = 0; i < n; ++i){
     for (int j = 0; j < n; ++j){
-      cin >> x;
-      g[i][j] = x;
-      cells[x].push_back({i, j});
+      if (mat[i][j] != 1)   continue;
+      ans = min(ans, dijkstra(i, j));
     }
   }
-  
-  int d[n][n];
-  memset(d, INF, n*n*sizeof(int));
 
-  priority_queue<pair<int, ii>, vector< pair<int, ii> >, greater< pair<int, ii> > > pq;
-  pq.push({0, {-1, -1}});
-  while (!pq.empty()){
-    auto x = pq.top(); pq.pop();
-    int dist = x.first;
-    ii currPos = x.second;
-    
-    int val = (currPos.first == -1 ? 0 : g[currPos.first][currPos.second]);
-    cout << val << endl;
-
-    if (val == k){
-      cout << dist << endl;
-      break;
-    }
-
-    for (auto& nextPos : cells[val+1]){
-      int wt = manDist(currPos, nextPos);
-      if (d[currPos.first][currPos.second] + wt < d[nextPos.first][nextPos.second]){
-        d[nextPos.first][nextPos.second] = d[currPos.first][currPos.second] + wt;
-        pq.push({d[nextPos.first][nextPos.second], nextPos});
-      }
-    }
-  }
+  cout << (ans == INF? -1 : ans) << endl;
 
   return 0;
 }
