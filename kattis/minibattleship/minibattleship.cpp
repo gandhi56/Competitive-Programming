@@ -1,3 +1,4 @@
+#define LIN cout << __LINE__ << endl;
 #define INF 0x3f3f3f3f
 #define pb(x) push_back(x)
 #define sz(x) (int)(x).size()
@@ -29,23 +30,30 @@ void show_grid(){
 }
 
 bool place(int i, int r, int c, int o){
-  if ((!o and c + ships[i] > n) or (o and r + ships[i] > n))
-    return false;
   
+  // does the ship go out of bounds
+  if ((!o and c + ships[i] > n+1) or (o and r + ships[i] > n)){
+    return false;
+  }
+  
+  // is there a ship already placed there
   for (int j = 0; j < ships[i]; ++j){
     if (o){
-      if (m[r+j][c] != '?') return false;
+      if (m[r+j][c] != '?'){
+        return false;
+      }
     }
     else{
       if (m[r][c+j] != '?') return false;
     }
   }
 
+  // did Bob miss
   for (int j = 0; j < ships[i]; ++j){
-    if (o and grid[r+j][c] == 'O'){ // vertical
+    if (o and grid[r+j][c] == 'X'){ // vertical
       return false;
     }
-    else if (!o and grid[r][c+j] == 'O'){
+    else if (!o and grid[r][c+j] == 'X'){
       return false;
     }
   }
@@ -75,38 +83,41 @@ void kill(int i, int r, int c, int o){
 bool check_hits(){
   for (int i = 0; i < n; ++i)
     for (int j = 0; j < n; ++j)
-      if (grid[i][j]=='X' and m[i][j]=='?')
+      if (grid[i][j] == 'O' and m[i][j] == '?')
         return false;
+  for (int i = 0; i < n; ++i){
+    for (int j = 0; j < n; ++j){
+      if (grid[i][j] == 'X' and m[i][j] != '?')
+        return false;
+    }
+  }
   return true;
 }
 
 bool battle(int i){
   if (i == k){
-    if (check_hits()){
-      return true;
-    }
-    return false;
+    return check_hits();
   }
   for (int r = 0; r < n; ++r){
     for (int c = 0; c < n; ++c){
       if (place(i, r, c, 0)){
         if (battle(i+1)){
           ans++;
-          cout << endl;
-          show_m();
-          cout << endl;
+          //cout << endl;
+          //show_m();
+          //cout << endl;
         }
         kill(i, r, c, 0);
       }
 
-      if (place(i, r, c, 1)){
+      if (ships[i] > 1 and place(i, r, c, 1)){
         if (battle(i+1)){
           ans++;
-          cout << endl;
-          show_m();
-          cout << endl;
+          //cout << endl;
+          //show_m();
+          //cout << endl;
         }
-        kill(i, r, c, 0);
+        kill(i, r, c, 1);
       }
     }
   }
