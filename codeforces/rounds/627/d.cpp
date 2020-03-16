@@ -17,7 +17,7 @@ int main(){
   int n;
   cin >> n;
 
-  int cnt = 0;
+  ll cnt = 0;
   vi a(n), b(n);
   for (auto& x : a) cin >> x;
   for (auto& x : b) cin >> x;
@@ -28,10 +28,11 @@ int main(){
   sort(diff.begin(), diff.end());
 
   for (int i = 0; i < n; ++i){
-    int j;
-    for (j = n-1; j > i and diff[j] > -diff[i]; --j){}
-    cnt += n - j -1 ;
+    if (diff[i] <=  0) continue;
+    int pos = lower_bound(diff.begin(), diff.end(), -diff[i] + 1) - diff.begin();
+    cnt += i - pos;
   }
+
   cout << cnt << endl;
 
   return 0;

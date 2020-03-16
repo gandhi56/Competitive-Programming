@@ -12,12 +12,6 @@ typedef vector<vi> vii;
 typedef vector<vector<ii>> viii;
 
 string s;
-int n, ans;
-vi dp(1000000);
-
-int solve(int i, int d, bool* seen){
-  
-}
 
 int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
@@ -26,14 +20,19 @@ int main(){
   cin >> t;
   while (t--){
     cin >> s;
-    s = "s" + s + "t";
-    cout << s << endl;
+    vi r;
+    r.pb(0);
+  
+    for (int i = 0; i < s.size(); ++i)
+      if (s[i] == 'R')
+        r.pb(i+1);
+    r.pb(s.size()+1);
 
-    // d is the jump step
-    n = s.size();
-    ans = -1;
-    for (int d = 1; ; ++d){
-    }
+    int ans = 0;
+    for (int i = 0; i < sz(r)-1; ++i)
+      ans = max(ans, r[i+1] - r[i]);
+
+    cout << ans << endl;
   }
   
   return 0;
