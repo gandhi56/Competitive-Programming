@@ -14,5 +14,18 @@ typedef vector<vector<ii>> viii;
 
 int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
+  
+  int n;
+  cin >> n;
+
+  int a[n];
+  for (int i =0 ; i < n; ++i)   cin >> a[i];
+
+  int m = -1;
+  for (int i =0 ;i < n; ++i)   m = max(m, a[i]);
+  int tot = 0;
+  for (int i =0 ;i < n; ++i)  tot += m-a[i];
+  cout << tot << endl;
+  
   return 0;
 }

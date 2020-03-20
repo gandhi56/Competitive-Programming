@@ -1,4 +1,3 @@
-#define LIN cout << __LINE__ << endl;
 #define INF 0x3f3f3f3f
 #define pb(x) push_back(x)
 #define sz(x) (int)(x).size()
