@@ -13,30 +13,32 @@ typedef vector<vi> vii;
 typedef vector<vector<ii>> viii;
 
 int n, k, p;
-int a[100][50];
-int A;
+int a[200][200];
+int dp[200][2000];
 
-int dp[200][200];
+int f(int p, int pl){
+  if (dp[p][pl] != -1)   return dp[p][pl];
+  if (p == n)   return 0;
+  int b = 0;
+  int cur = 0;
+  for (int i = 0; i <= k; ++i){
+    if (pl - i >= 0)
+      b = max(b, cur + f(p+1, pl - i));
+    if (i != k)
+      cur += a[p][i];
+  }
+  return dp[p][pl] = b;
+}
 
-int solve(int x, int i){
-  if (dp[x][i] != -1)   return dp[x][i];
-  if (x == 0)   return dp[x][i] = 0;
-  if (i == p-1){
-    int val = 0;
-    for (int k = 0; k < x; ++k)
-      val += a[i][k];
-    return dp[x][i] = val;
+int solve(){
+  cin >> n >> k >> p;
+  memset(dp, -1, sizeof(dp));
+  for (int i =0; i < n; ++i){
+    for (int j = 0; j < k; ++j)
+      cin >> a[i][j];
   }
 
-  int ans = 0;
-  int val = 0;
-  for (int y = 0;  y <= x; ++y){
-    val =0;
-    for (int k = 0; k < y; ++k)
-      val += a[i][k];
-    ans = max(ans, val + solve(x - y, i+1));
-  }
-  return dp[x][i] = ans;
+  return f(0, p);
 }
 
 int main(){
@@ -44,23 +46,8 @@ int main(){
   
   int t;
   cin >> t;
-  for (int tt =1; tt <= t; ++tt){
-    cin >> n >> k >> p;
-
-    memset(a, 0, sizeof(a));
-    //memset(dp, -1, sizeof(dp));
-    
-    for (int i = 0; i < 200; ++i)
-      for (int j = 0; j < 200; ++j)
-        dp[i][j] = -1;
-    
-    for (int i = 0; i < n; ++i)
-      for (int j = 0; j < k; ++j)
-        cin >> a[i][j];
-
-    A = solve(p, 0);
-    
-    cout << "Case #" << tt << ": " << A << endl;
+  for (int tc = 1; tc <= t; ++tc){
+    cout << "Case #" << tc << ": " << solve() << endl;
   }
   
   return 0;
