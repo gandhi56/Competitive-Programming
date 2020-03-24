@@ -39,6 +39,7 @@ int main(){
   while (t--){
     cin >> s;
     sa.clear();
+    lcp.clear();
 
     // construct suffix array
     for (int i = 0; i < sz(s); ++i){
@@ -46,22 +47,20 @@ int main(){
     }
 
     sort(sa.begin(), sa.end());
-
     construct_lcp(sz(s));
-
-  
-    for (int i = 0; i < sz(s); ++i)
-      cout << sa[i].first << ' ' << lcp[i] << endl;
-
+    
+    cout << "lcp[] ";
+    for (auto x : lcp)   cout << x << ' ';
     cout << endl;
 
     int tot =0;
-
-    for (int i = 0; i < sz(s); ++i)
+    for (int i = 1; i < sz(s); ++i)
       tot += lcp[i];
 
     int n = sz(s);
+    cout << "n = " << n << endl;
     cout << tot << endl;
+  
   }
   
   return 0;
