@@ -12,24 +12,7 @@ typedef vector<bool> vb;
 typedef vector<vi> vii;
 typedef vector<vector<ii>> viii;
 
-bool solve(ll n, ll k){
-  if (k*k <= n and (n&1) == (k&1))  return true;
-  return false;
-}
-
 int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
-  
-  int t;
-  cin >> t;
-  while (t--){
-
-    ll n, k;
-    cin >> n >> k;
-
-    cout << (solve(n, k)? "YES" : "NO") << endl;
-
-  }
-  
   return 0;
 }
