@@ -11,62 +11,15 @@ typedef long long ll;
 typedef pair<int, int> pii;
 typedef vector<int> vi;
 
-int n
+int n;
 vi t;
 vi c;
 
-int getcol(int u){
-  if (u == 0) return 1;
-  if (u == 1) return 0;
-}
-
-int mincol(vi& t, int n){
-  if ((n&1) == 0){
-    int k = 1;
-    for (int i = 0; i < n; ++i)
-      if (t[i] != t[(i+1)%n])
-        k = 2;
-    return k;
-  }
-
-  for (int i = 0; i < n; ++i){
-    if (t[i] != t[(i+1)%n] and t[(i+1)%n] != t[(i+2)%n] and t[(i+2)%n] != t[i])
-      return 3;
-    if (t[i] != t[(i+1)%n])
-      return 2;
-    if (t[(i+1)%n] != t[(i+2)%n])
-      return 2;
-    if (t[i] != t[(i+2)%n])
-      return 2;
-  }
-  return 1;
-}
-
-void solve(){
-  c[0] = 1;
-  for (int i = 1; i < n; ++i){
-    if (c[i] != -1) continue;
-    if (t[i] == t[i-1]){
-      c[i] = c[i-1];
-    }
-    else{
-      // ti != ti-1
-      int k = 1;
-      if (c[i-1] == 1)  k = 2;
-      if (t[i] == t[(i+1)%n]){
-        c[i] = k;
-        c[(i+1)%n] = k;
-      }
-      else{
-        c[i] = k;
-      }
-    }
-  }
-
-
-  for (auto x : c)  cout << x << ' ';
-  cout << endl;
-
+bool same_type(){
+  for (auto x : t)
+    if (x != t[0])
+      return false;
+  return true;
 }
 
 int main(){
@@ -76,25 +29,40 @@ int main(){
   cin >> q;
   while (q--){
     cin >> n;
-
-    t.resize(0);
-    t.resize(n);
-    for (auto& x : t) cin >> x;
-
-    c.resize(0);
-    c.assign(n, -1);
-
+    t.assign(n, 0);
+    c.assign(n, 0);
+    for (auto& x : t)   cin >> x;
+    if (same_type()){
+      cout << 1 << endl;
+      for (int i = 0; i < n; ++i)   cout << 1 << ' ';
+      cout << endl;
+      continue;
+    }
+    if (n%2 == 0){
+      cout << 2 << endl;
+      for (int i = 0; i < n; ++i)
+        cout << (i&1?1:2) << ' ';
+      cout << endl;
+      continue;
+    }
+    // bug in the below case
+    int cnt = 0;
+    for (int i = 0; i < n; ++i)
+      if (t[i] == t[(i+1)%n])
+        cnt++;
+    if (cnt == 1){
+      cout << 2 << endl;
+      for (int i = 0; i < n; ++i)
+        cout << (i&1?1:2) << ' ';
+      cout << endl;
+      continue;
+    }
+    cout << 3 << endl;
+    cout << 3 << ' ';
+    for (int i = 1; i < n; ++i)
+      cout << (i&1?1:2) << ' ';
+    cout << endl;
   }
-  
+
   return 0;
 }
-
-
-
-
-
-
-
-
-
-
