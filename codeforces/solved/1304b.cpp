@@ -42,16 +42,41 @@ int main(){
 
   string l, c, r;
   for (auto& x : s){
-    if (x.second == 1 and sz(x.second) > sz(c) and ispal(x.first)){
+    if (x.second == 0)  continue;
+    bool pal = ispal(x.first);
+    if (x.second == 1 and sz(x.first) > sz(c) and ispal(x.first)){
       c = x.first;
       x.second--;
     }
     else{
-
-      string y = getrev(x.first);
-
+      if (pal){
+        while (x.second >= 2){
+          l = x.first + l;
+          r = r + x.first;
+          x.second -= 2;
+        }
+        if (x.second == 1 and sz(x.first) > sz(c)){
+          c = x.first;
+          x.second--;
+        }
+      }
+      else{
+        auto rx = getrev(x.first);
+        auto it = s.find(rx);
+        if (it == s.end())  continue;
+        int cnt = min(it->second, x.second);
+        while (x.second and it->second){
+          l = x.first + l;
+          r = r + it->first;
+          x.second--;
+          it->second--;
+        }
+      }
     }
   }
+
+  cout << sz(l)+ sz(c) + sz(r) << endl;
+  cout << l << c << r << endl;
 
 
   return 0;
