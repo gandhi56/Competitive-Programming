@@ -11,34 +11,26 @@ typedef long long ll;
 typedef pair<int, int> pii;
 typedef vector<int> vi;
 
+
 int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
   
   int t;
   cin >> t;
+
   while (t--){
-    int n, k;
-    cin >> n >> k;
- 
-    int l, r;
-    for (int i = n-2; i >= 0; --i){
-      if (k <= n - i - 1){
-        l = i;
-        r = n-k;
-        break;
-      }
-      else{
-        k -= n-i-1;
-      }
+    int n;
+    cin >> n;
+
+    if (n == 1){
+      cout << -1 << endl;
+      continue;
     }
 
-    for (int i = 0; i < n; ++i)
-      if (i == l or i == r)
-        cout << 'b';
-      else
-        cout << 'a';
-    cout << endl;
-
+    string s;
+    s = "2";
+    while (sz(s) < n)   s += "7";
+    cout << s << endl;
   }
   
   return 0;

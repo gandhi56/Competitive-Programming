@@ -11,34 +11,27 @@ typedef long long ll;
 typedef pair<int, int> pii;
 typedef vector<int> vi;
 
+#define PI M_PI
+
+double polygon_area(int n, int l){
+  // is this right?
+  return (l*l*n) / (4.0 * tan(PI/n));
+}
+
 int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
-  
-  int t;
-  cin >> t;
-  while (t--){
-    int n, k;
-    cin >> n >> k;
- 
-    int l, r;
-    for (int i = n-2; i >= 0; --i){
-      if (k <= n - i - 1){
-        l = i;
-        r = n-k;
-        break;
-      }
-      else{
-        k -= n-i-1;
-      }
-    }
 
-    for (int i = 0; i < n; ++i)
-      if (i == l or i == r)
-        cout << 'b';
-      else
-        cout << 'a';
-    cout << endl;
+  cout << fixed << setprecision(8);
 
+  int N;
+  cin >> N;
+  while (N--){
+    int n, d, g;
+    double l;
+    cin>> n >> l >> d >> g;
+
+    double a = polygon_area(n, l) + n*l*g*d + PI*g*g*d*d;
+    cout << a << endl;
   }
   
   return 0;
