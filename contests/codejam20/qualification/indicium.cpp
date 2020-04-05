@@ -13,6 +13,7 @@ typedef vector<int> vi;
 
 int n, k;
 int m[100][100];
+vi sum;
 
 void show(){
   for (int i = 0; i < n; ++i){
@@ -70,13 +71,69 @@ bool cp(){
 void solve(int tc){
   memset(m, -1, sizeof(m));
   cin >> n >> k;
-  cout << "Case #" << tc << ": ";
+  //cout << "Case #" << tc << ": ";
+
+  if (k%n == 0){
+    // k is a multiple of n
+    m[0][0] = k/n;
+    for (int j = 1; j < n; ++j){
+      m[0][j] = m[0][j-1] + 1;
+      if (m[0][j] > n){
+        m[0][j] = 1;
+      }
+    }
+
+    for (int i = 1; i < n; ++i){
+      for (int j = 0; j < n; ++j)
+        if (j < i)
+          m[i][j] = m[0][n-i+j];
+        else if (j == i)
+          m[i][i] = m[0][0];
+        else
+          m[i][j] = m[0][j-i];
+    }
+
+    cout << "Case #" << tc << ": POSSIBLE" << endl;
+    show();
+  }
+  else{
+
+    /*
+    m[0][0] = k/(n-1);
+    for (int j = 1; j < n; ++j){
+      m[0][j] = m[0][j-1] + 1;
+      if (m[0][j] > n){
+        m[0][j] = 1;
+      }
+    }
+
+    for (int i = 1; i < n-1; ++i){
+      for (int j = 0; j < n; ++j)
+        if (j < i)
+          m[i][j] = m[0][n-i+j];
+        else if (j == i)
+          m[i][i] = m[0][0];
+        else
+          m[i][j] = m[0][j-i];
+    }
+    m[n-1][n-1] = k - (n-1)*m[0][0];
+    */
+ 
+    cp();
+
+    show();
+    //cout << "Case #" << tc << ": IMPOSSIBLE" << endl;
+  }
+
+  /*
   if (cp()){
     cout << "POSSIBLE" << endl;
     show();
   }
   else
     cout << "IMPOSSIBLE" << endl;
+  */
+
 }
 
 int main(){

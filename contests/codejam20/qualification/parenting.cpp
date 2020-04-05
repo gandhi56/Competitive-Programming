@@ -3,8 +3,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define min(a, b, c) min(a, min(b, c))
-#define max(a, b, c) max(a, max(b, c))
+#define min3(a, b, c) min(a, min(b, c))
+#define max3(a, b, c) max(a, max(b, c))
 #define rep(i, a, b) for(int i = a; i < (b); ++i)
 #define trav(a, x) for(auto& a : x)
 #define all(x) x.begin(), x.end()
@@ -46,8 +46,8 @@ void solve(int tc){
 
   // check if impossible
   for (int i = 0; i+2 < sz(a); ++i){
-    pii com = {max(a[i].s, a[i+1].s, a[i+2].s), 
-                min(a[i].t, a[i+1].t, a[i+2].t)};
+    pii com = {max3(a[i].s, a[i+1].s, a[i+2].s), 
+                min3(a[i].t, a[i+1].t, a[i+2].t)};
   
     if (com.first < com.second){
       cout << "Case #" << tc << ": IMPOSSIBLE" << endl;
@@ -56,14 +56,22 @@ void solve(int tc){
   }
 
   // find a scheduling
-  a[0].c = 'C';
-  for (int i = 1; i < sz(a); ++i){
-    if (overlap(a[i-1], a[i])){
-      a[i].c = (a[i-1].c == 'C'? 'J':'C');
+  for (int i = 0; i < n; ++i){
+    a[i].c = 'C';
+    for (int j = 0; j < i; ++j){
+      if (overlap(a[j], a[i]) and a[i].c == a[j].c){
+        a[i].c = 'J';
+        break;
+      }
     }
-    else{
-      a[i].c = a[i-1].c;
+
+    for (int j = 0; j < i; ++j){
+      if (overlap(a[j], a[i]) and a[i].c == a[j].c){
+        cout << "Case #" << tc << ": IMPOSSIBLE" << endl;
+        return;
+      }
     }
+
   }
 
   string ans;
