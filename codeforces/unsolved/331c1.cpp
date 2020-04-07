@@ -14,8 +14,39 @@ typedef long long ll;
 typedef pair<int, int> pii;
 typedef vector<int> vi;
 
+ll n;
+vector<ll> dp(1000000, INF);
+
+ll count(int x){
+  if (dp[x] != INF) return dp[x];
+
+  map<int, int> m;
+  while (n){
+    m[n%10]++;
+    n /= 10;
+  }
+
+  ll cnt = 0;
+  while (x){
+    int d;
+    for (d = 9; d >= 1 and m[d] == 0; --d){}
+    m[d]--;
+    m[(x/10)%10]--;
+    x -= d;
+    m[x%10]++;
+    m[(x/10)%10]++;
+    cnt++;
+    //cout << x << endl;
+  }
+
+}
 
 int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
+  
+  cin >> n;
+
+  cout << cnt << endl;
+
   return 0;
 }
