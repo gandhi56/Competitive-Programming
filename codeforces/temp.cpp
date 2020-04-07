@@ -3,8 +3,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define max(a, b, c) max(a, max(b, c))
-#define min(a, b, c) min(a, min(b, c))
+#define max3(a, b, c) max(a, max(b, c))
+#define min3(a, b, c) min(a, min(b, c))
 #define rep(i, a, b) for(int i = a; i < (b); ++i)
 #define trav(a, x) for(auto& a : x)
 #define all(x) x.begin(), x.end()

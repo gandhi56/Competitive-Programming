@@ -17,5 +17,22 @@ typedef vector<int> vi;
 
 int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
+  
+  int n;
+  cin >> n;
+
+  map<int,ull> m;
+  for (int i =0; i < n; ++i){
+    ull x;
+    cin >> x;
+
+    int j = i&1;
+    m[j] += x/2;
+    m[j^1] += x - x/2;
+  }
+
+  cout << min(m[0], m[1]) << endl;
+
+
   return 0;
 }

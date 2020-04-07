@@ -17,5 +17,27 @@ typedef vector<int> vi;
 
 int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
+  
+  int n;
+  cin >> n;
+
+  vector<pair<ll, ll>> mines;
+  for (int i =0 ; i <n ; ++i){
+    ll x, y;
+    cin >> x >> y;
+    mines.emplace_back(x, y);
+  }
+
+  ll minx = 1e10, miny = 1e10;
+  ll maxx = -1e10, maxy = -1e10;
+  for (auto& m : mines){
+    minx = min(minx, m.first);
+    maxx = max(maxx, m.first);
+    miny = min(miny, m.second);
+    maxy = max(maxy, m.second);
+  }
+  ll d = max(maxx - minx, maxy - miny);
+  cout << d*d << endl;
+
   return 0;
 }

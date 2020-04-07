@@ -17,5 +17,38 @@ typedef vector<int> vi;
 
 int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
+  
+  int t;
+  cin >> t;
+  while (t--){
+    int n;
+    cin >> n;
+
+    string s;
+    cin >> s;
+
+    int time = 0;
+    while (1){
+      int cnt = 0;
+      //string ss = s;
+      for (int i = n-1; i-1 >= 0;--i){
+        if (s[i-1] == 'A' and s[i] != 'A'){
+          s[i-1] = 'A';
+          s[i] = 'A';
+          cnt++;
+        }
+      }
+      //cout << ss << endl;
+      //s = ss;
+      if (cnt){
+        time++;
+      }
+      else{
+        break;
+      }
+    }
+    cout << time << endl;
+  }
+
   return 0;
 }

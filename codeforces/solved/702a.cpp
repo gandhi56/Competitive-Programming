@@ -17,5 +17,25 @@ typedef vector<int> vi;
 
 int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
+  
+  int n;
+  cin >> n;
+  vi a(n);
+  for (auto& x : a) cin >> x;
+
+  int ans = 1;
+  int curr = 1;
+  for (int i = 1; i < n; ++i){
+    if (a[i-1] < a[i]){
+      curr++;
+    }
+    else{
+      curr = 1;
+    }
+    ans = max(ans, curr);
+  }
+
+  cout << ans  << endl;
+
   return 0;
 }
