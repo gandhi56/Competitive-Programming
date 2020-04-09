@@ -31,7 +31,7 @@ int main(){
   ll n;
   cin >> n;
 
-  cout << (powmod(27, n) - powmod(7, n)) % MOD << endl;
+  cout << (powmod(27ll, n) - powmod(7ll, n)) % MOD << endl;
 
   return 0;
 }
