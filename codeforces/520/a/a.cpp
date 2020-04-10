@@ -3,35 +3,33 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+#define max3(a, b, c) max(a, max(b, c))
+#define min3(a, b, c) min(a, min(b, c))
 #define rep(i, a, b) for(int i = a; i < (b); ++i)
 #define trav(a, x) for(auto& a : x)
 #define all(x) x.begin(), x.end()
 #define sz(x) (int)(x).size()
-typedef unsigned long long ll;
+typedef unsigned long long ull;
+typedef long long ll;
 typedef pair<int, int> pii;
 typedef vector<int> vi;
 
-const ll MOD = 1000000007;
-
-ll powmod(ll a, ll b){
-  a %= MOD;
-  ll res = 1;
-  while (b){
-    if (b&1)
-      res = (res * a) % MOD;
-    a = a*a % MOD;
-    b >>= 1;
-  }
-  return res;
-}
 
 int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
   
-  ll n;
+  int n;
   cin >> n;
 
-  cout << (powmod(27ll, n) - powmod(7ll, n)) % MOD << endl;
+
+  string s;
+  cin >> s;
+
+  map<char, int> m;
+  for (auto c : s)
+    m[(char)tolower(c)]++;
+
+  cout << (sz(m) >= 26? "YES":"NO") << endl;
 
   return 0;
 }
