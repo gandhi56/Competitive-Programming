@@ -21,24 +21,11 @@ int main(){
   int t;
   cin >> t;
   while (t--){
-
-    int n;
+    ll n;
     cin >> n;
 
-    ll a[n];
-    ll b[n];
-    for (int i = 0; i < n; ++i)
-      cin>> a[i] >> b[i];
-
-    ll ans = 0, mn = 1e18;
-    for (int i =0 ; i < n; ++i){
-      int j = (i+1) % n;
-      ll val = min(a[j], b[i]);
-      ans += a[j] - val;
-      mn = min(mn, val);
-    }
-    ans += mn;
-    cout << ans << endl;
+    ll a = n/2 + 1;
+    cout << n-a << endl;
   }
 
   return 0;

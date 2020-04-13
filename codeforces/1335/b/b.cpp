@@ -21,24 +21,24 @@ int main(){
   int t;
   cin >> t;
   while (t--){
+    int n, a, b;
+    cin >> n >> a >> b;
 
-    int n;
-    cin >> n;
-
-    ll a[n];
-    ll b[n];
-    for (int i = 0; i < n; ++i)
-      cin>> a[i] >> b[i];
-
-    ll ans = 0, mn = 1e18;
-    for (int i =0 ; i < n; ++i){
-      int j = (i+1) % n;
-      ll val = min(a[j], b[i]);
-      ans += a[j] - val;
-      mn = min(mn, val);
+    string s;
+    for (int i = 0; i < b; ++i)
+      s.push_back('a'+i);
+    
+    int i = 0;
+    while (sz(s) < a){
+      s.push_back(s[i++]);
     }
-    ans += mn;
-    cout << ans << endl;
+    
+    i = 0;
+    while (sz(s) < n){
+      s.push_back(s[i++]);
+    }
+
+    cout << s << endl;
   }
 
   return 0;

@@ -17,29 +17,5 @@ typedef vector<int> vi;
 
 int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
-  
-  int t;
-  cin >> t;
-  while (t--){
-
-    int n;
-    cin >> n;
-
-    ll a[n];
-    ll b[n];
-    for (int i = 0; i < n; ++i)
-      cin>> a[i] >> b[i];
-
-    ll ans = 0, mn = 1e18;
-    for (int i =0 ; i < n; ++i){
-      int j = (i+1) % n;
-      ll val = min(a[j], b[i]);
-      ans += a[j] - val;
-      mn = min(mn, val);
-    }
-    ans += mn;
-    cout << ans << endl;
-  }
-
   return 0;
 }

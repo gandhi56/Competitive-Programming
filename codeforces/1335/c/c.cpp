@@ -21,24 +21,31 @@ int main(){
   int t;
   cin >> t;
   while (t--){
-
     int n;
     cin >> n;
 
-    ll a[n];
-    ll b[n];
-    for (int i = 0; i < n; ++i)
-      cin>> a[i] >> b[i];
+    int a[n];
+    for (int i = 0; i < n; ++i) cin >> a[i];
 
-    ll ans = 0, mn = 1e18;
-    for (int i =0 ; i < n; ++i){
-      int j = (i+1) % n;
-      ll val = min(a[j], b[i]);
-      ans += a[j] - val;
-      mn = min(mn, val);
+    map<int,int> m;
+    for (int i=0; i < n; ++i)
+      m[a[i]]++;
+
+    int same = -1;
+    int y =0;
+    for (auto p : m)
+      y = max(y, p.second);
+
+    int x = sz(m)-1;
+    //cout << "y = " << y << endl;
+    //cout << "x = " << x  << endl;
+
+    if (x >= y){
+      cout << y << endl;
     }
-    ans += mn;
-    cout << ans << endl;
+    else{
+      cout << x + ((y-x)/2)<< endl;
+    }
   }
 
   return 0;

@@ -25,32 +25,21 @@ int main(){
     int n;
     cin >> n;
 
-    int p[n], c[n];
-    for (int i = 0; i < n; ++i)
+    int p[n+1], c[n+1];
+    p[0] = 0;
+    c[0] = 0;
+    for (int i = 1; i <= n; ++i)
       cin >> p[i] >> c[i];
 
     // p increases if a player attempts the level
     // if p increases then c either does not change or increase by up to p[i] - p[i-1]
 
     string ans = "YES";
-    for (int i = 1; i < n; ++i){
-      if (p[i] < c[i] or p[i-1] < c[i-1]){
-        ans = "NO";
-        break;
-      }
-      if (p[i-1] > p[i] or c[i-1] > c[i]){
-        ans = "NO";
-        break;
-      }
-      if (p[i] == p[i-1] and c[i] != c[i-1]){
-        ans = "NO";
-        break;
-      }
-      if (p[i-1] < p[i] and c[i]-c[i-1] > p[i]-p[i-1]){
-        ans = "NO";
-        break;
-      }
-
+    for (int i = 1; i <= n and ans=="YES"; ++i){
+      int dp = p[i] - p[i-1];
+      int dc = c[i] - c[i-1];
+      if (dp < 0 or dc < 0) ans = "NO";
+      if (dp < dc)  ans = "NO";
     }
     cout << ans << endl;
   }
