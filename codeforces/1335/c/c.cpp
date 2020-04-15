@@ -27,25 +27,20 @@ int main(){
     int a[n];
     for (int i = 0; i < n; ++i) cin >> a[i];
 
+    set<int> s;
+    for (int i = 0; i < n; ++i) s.insert(a[i]);
+
     map<int,int> m;
     for (int i=0; i < n; ++i)
       m[a[i]]++;
 
-    int same = -1;
-    int y =0;
+    int maxcnt = 1;
     for (auto p : m)
-      y = max(y, p.second);
+      maxcnt = max(maxcnt, p.second);
 
-    int x = sz(m)-1;
-    //cout << "y = " << y << endl;
-    //cout << "x = " << x  << endl;
+    int diff = sz(s);
+    cout << max(min(diff-1, maxcnt), min(diff, maxcnt-1)) << endl;
 
-    if (x >= y){
-      cout << y << endl;
-    }
-    else{
-      cout << x + ((y-x)/2)<< endl;
-    }
   }
 
   return 0;

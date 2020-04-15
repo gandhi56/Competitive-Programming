@@ -17,5 +17,18 @@ typedef vector<int> vi;
 
 int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
+  
+  int t;
+  cin >> t;
+  while (t--){
+    string g[9];
+    for (int i =0 ; i  <9; ++i) cin >> g[i];
+    for (int i = 0; i < 9; ++i){
+      for (int j = 0; j < 9; ++j)
+        cout << ( g[i][j]=='1'?'9':g[i][j]);
+      cout << endl;
+    }
+  }
+
   return 0;
 }
