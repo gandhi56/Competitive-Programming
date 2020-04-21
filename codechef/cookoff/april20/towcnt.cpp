@@ -14,28 +14,35 @@ typedef long long ll;
 typedef pair<int, int> pii;
 typedef vector<int> vi;
 
-struct seg{
-  int a, b, c, d;
-};
+const int maxn = 2001;
 
-void solve(){
-  int h, n;
-  cin >> h >> n;
+int h, n;
+int t[maxn];
+int x[maxn];
+int a[maxn];
 
-  vector<seg> lines;
-  for (int i =0 ; i < n; ++i){
-    int t, x, a;
-    cin >> t >> x >> a;
-    if (t == 0){
-      lines.emplace_back(x, 0, x, a);
-    }
-    else{
-      lines.emplace_back(x, h, x, a);
+void count(int i){
+  // towards right
+  int cnt = 0;
+  int len = 1;
+  double prevAng = 0.0;
+  double currAng = 0.0; // TODO
+  while (i+len < n){
+    currAng = calcAngle(i, i+len);
+    if (prevAng < currAng){
+      
     }
   }
+}
 
+void solve(){
+  cin >> h >> n;
+
+  for (int i = 0; i < n; ++i)
+    cin >> t[i] >> x[i] >> a[i];
+  
   for (int i = 0; i < n; ++i){
-    for ()
+    count(i);
   }
 
 }

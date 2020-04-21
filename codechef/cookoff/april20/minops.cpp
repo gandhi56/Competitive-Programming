@@ -18,24 +18,33 @@ void solve(){
   string s, r;
   cin >> s >> r;
   int n = sz(s);
-  ll l = 0ll;
-  ll k = 0ll;
-  int i = 0;
-  while (i < n){
-    if (s[i] != r[i]){
-      int len = 0;
-      while (i+len < n and s[i+len] != r[i+len])  len++;
-      l += len;
-      k++;
-      i += len+1;
-    }
-    else{
-      i++;
-    }
+  
+  vi lengths;
+  int curlen = 0;
+  int fl = 0;
+  int matlen = 0;
+  ll ans = 0;
+  for  (int i = 0; i < n; ++i){
+    if (s[i] == r[i]){
+      curlen++;
+      continue;
+    } 
+    if (curlen > 0 and fl > 0)
+      lengths.push_back(curlen), ans += curlen;
+    curlen = 0;
+    fl = 1;
+    ans++;
+    continue;
   }
-  cout << k << endl;
-  cout << l << endl;
-  cout << k*l << endl;
+
+  n = ans;
+  sort(all(lengths), greater<int>());
+  for (ll i = 0; i < lengths.size(); ++i){
+    n -= lengths[i];
+    ans = min(ans, (i+2)*n);
+  }
+
+  cout << ans << endl;
 }
 
 int main(){
