@@ -1,3 +1,4 @@
+* ricochetrobots: complex brute force problem
 * substrings: count the number of repeated unique substrings in a string using suffix array
 * roadtrip: DP
 * inspectingillumination

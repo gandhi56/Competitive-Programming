@@ -14,44 +14,41 @@ typedef long long ll;
 typedef pair<int, int> pii;
 typedef vector<int> vi;
 
-void solve(){
-  int n;
-  cin >> n;
-
-  vi a(n);
-  for (auto& x : a) cin >> x;
-
-  sort(all(a));
-
-  int i = n/2-1;
-  if (n%2)
-    i++;
-  int inc = 1;
-  vi ans;
-  while (sz(ans) < n){
-    ans.push_back(a[i]);
-    i += inc;
-    if (inc > 0){
-      inc = -inc - 1;
-    }
-    else{
-      inc = -inc + 1;
-    }
-    // cout << "inc = " << inc << endl;
-  }
-
-  for (auto x : ans)  cout << x << ' ';
-  cout << endl;
-
-}
 
 int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
   
+  vector<ll> pow2;
+  pow2.push_back(1);
+  int i = 1;
+  while (sz(pow2) < 40){
+    pow2.push_back((1ll<<(i++))+pow2.back());
+  }
+
   int t;
   cin >> t;
+
   while (t--){
-    solve();
+    int n;
+    cin >> n;
+
+    vector<ll> a(n);
+    for (auto& x : a) cin >> x;
+
+    ll ans = 0;
+    int x0 = 0;
+    int x1 = 0;
+    for (int i = 1; i < n; ++i){
+      while (1){
+        if (a[i-1] <= a[i] + pow2[x1] - pow2[x0]){
+          ans += x1 - x0;
+          x1 = x0;
+          break;
+        }
+        x1++;
+      }
+    }
+    cout << ans << endl;
   }
   
   return 0;
