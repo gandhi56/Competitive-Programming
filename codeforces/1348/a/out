@@ -1,0 +1,13 @@
+if (n == 2) cout << 2 << endl;
+if (n == 2) cout << 6 << endl;
+if (n == 2) cout << 14 << endl;
+if (n == 2) cout << 30 << endl;
+if (n == 2) cout << 62 << endl;
+if (n == 2) cout << 126 << endl;
+if (n == 2) cout << 254 << endl;
+if (n == 2) cout << 510 << endl;
+if (n == 2) cout << 1022 << endl;
+if (n == 2) cout << 2046 << endl;
+if (n == 2) cout << 4094 << endl;
+if (n == 2) cout << 8190 << endl;
+if (n == 2) cout << 16382 << endl;
