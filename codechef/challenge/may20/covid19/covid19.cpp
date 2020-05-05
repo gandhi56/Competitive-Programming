@@ -20,14 +20,29 @@ vi x;
 int count(int i){
   vector<bool> infect(n, false);
   infect[i] = true;
-
-  int k = i;
   for (int j = i+1; j < n; ++j){
-    if (x[j] - x[i] > 2)
+    if (infect[j-1] and abs(x[j] - x[j-1]) <= 2){
+      infect[j] = true;
+    }
+    else{
       break;
-
+    }
   }
 
+  for (int j = i-1; j >= 0; --j){
+    if (infect[j+1] and abs(x[j] - x[j+1]) <= 2){
+      infect[j] = true;
+    }
+    else{
+      break;
+    }
+  }
+
+  int cnt = 0;
+  for (int i =0 ; i < n; ++i)
+    if (infect[i])
+      cnt++;
+  return cnt;
 }
 
 void solve(){
@@ -42,6 +57,8 @@ void solve(){
     minans = min(minans, count(i));
     maxans = max(maxans, count(i));
   }
+
+  cout << minans << ' ' << maxans << endl;
 
 }
 

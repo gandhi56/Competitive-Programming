@@ -3,6 +3,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+#define max3(a, b, c) max(a, max(b, c))
 #define min3(a, b, c) min(a, min(b, c))
 #define rep(i, a, b) for(int i = a; i < (b); ++i)
 #define trav(a, x) for(auto& a : x)
@@ -13,31 +14,32 @@ typedef long long ll;
 typedef pair<int, int> pii;
 typedef vector<int> vi;
 
-int a, b, c, d, x, y;
-int x1, yy1, x2, y2;
-bool ok(int x, int y){
-  return x >= x1 and x <= x2 and y >= yy1 and y <= y2;
+ull f(ull x, ull y, ull z){
+  return (x&z)*(y&z);
+}
+
+void solve(){
+  ull x, y, l, r;
+  cin >> x >> y >> l >> r;
+
+  ull F = f(x, y, x|y);
+  ull z;
+  for (z = l; z <= r; ++z){
+    cout << z << ':' << f(x, y, z) << endl;
+  }
+
+  cout << z << ' ' << F <<  endl;
 }
 
 int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
+  
   int t;
+
   cin >> t;
-
   while (t--){
-    cin >> a >> b >> c >> d;
-    cin >> x >> y >> x1 >> yy1 >> x2 >> y2;
-
-    string ans = "YES";
-    x += b-a;
-    y += d-c;
-    if (ok(x, y) and (x2 > x1 or a+b == 0) and (y2>yy1 or c+d == 0))
-      cout << "YES" << endl;
-    else
-    {
-      cout << "NO" << endl;
-    }
-    
+    solve();
   }
+
   return 0;
 }
