@@ -14,28 +14,29 @@ typedef long long ll;
 typedef pair<int, int> pii;
 typedef vector<int> vi;
 
-ull f(ull x, ull y, ull z){
-  return (x&z)*(y&z);
-}
-
-void solve(){
-  ull x, y, l, r;
-  cin >> x >> y >> l >> r;
-
-  for (ull i = 0; i < 100; ++i){
-    cout << i << ' ' << f(x, y, i) << endl;
-  }
-
-}
 
 int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
   
   int t;
-
   cin >> t;
   while (t--){
-    solve();
+    int n;
+    cin >> n;
+
+    vi a(n);
+    for (auto& x : a)   cin >> x;
+    set<int> s;
+    for (int i = 0; i < n; ++i){
+      if (s.find((a[i] + i) % n) != s.end()){
+        cout << "NO" << endl;
+        goto done;
+      }
+      s.insert((a[i] + i) % n);
+    }
+    cout << "YES" << endl;
+done:;
+
   }
 
   return 0;
