@@ -21,21 +21,24 @@ int main(){
   int t;
   cin >> t;
   while (t--){
-    ll n;
-    cin >> n;
+    string s;
+    cin >> s;
 
-    vector<ll> a(n);
-    for (auto& x : a)   cin >> x;
-    set<ll> s;
-    for (ll i = 0; i < n; ++i){
-      if (s.find((a[i] + i) % n) != s.end()){
-        cout << "NO" << endl;
-        goto done;
-      }
-      s.insert((a[i] + i) % n);
+    int j = sz(s)/2;
+    int i = j-1;
+    if (sz(s)&1){
+      j = i + 2;
     }
-    cout << "YES" << endl;
-done:;
+
+    map<char, int> m1, m2;
+    for (int k = 0; k <= i; ++k){
+      m1[s[k]]++;
+    }
+    for (int k = j; k < sz(s); ++k){
+      m2[s[k]]++;
+    }
+
+    cout << (m1 == m2 ? "YES" : "NO") << endl;
 
   }
 

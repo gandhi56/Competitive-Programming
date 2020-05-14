@@ -20,24 +20,23 @@ int main(){
   
   int t;
   cin >> t;
-  while (t--){
-    ll n;
-    cin >> n;
 
-    vector<ll> a(n);
-    for (auto& x : a)   cin >> x;
-    set<ll> s;
-    for (ll i = 0; i < n; ++i){
-      if (s.find((a[i] + i) % n) != s.end()){
-        cout << "NO" << endl;
-        goto done;
-      }
-      s.insert((a[i] + i) % n);
+  while (t--){
+    ll n, m;
+    cin >> n >> m;
+    
+    if (n == 1){
+      cout << 0 << endl;
     }
-    cout << "YES" << endl;
-done:;
+    else if (n == 2){
+      cout << m << endl;
+    }
+    else{
+      cout << 2*m << endl;
+    }
 
   }
+
 
   return 0;
 }

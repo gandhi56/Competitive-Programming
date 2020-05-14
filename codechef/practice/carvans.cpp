@@ -21,21 +21,23 @@ int main(){
   int t;
   cin >> t;
   while (t--){
-    ll n;
-    cin >> n;
 
-    vector<ll> a(n);
+    int n;
+    cin >> n;
+    
+    vi a(n);
     for (auto& x : a)   cin >> x;
-    set<ll> s;
-    for (ll i = 0; i < n; ++i){
-      if (s.find((a[i] + i) % n) != s.end()){
-        cout << "NO" << endl;
-        goto done;
+
+    int cnt = 1;
+    for (int i = 1; i < n; ++i){
+      if (a[i] <= a[i-1]){
+        cnt++;
       }
-      s.insert((a[i] + i) % n);
+      else{
+        a[i] = a[i-1];
+      }
     }
-    cout << "YES" << endl;
-done:;
+    cout << cnt << endl;
 
   }
 

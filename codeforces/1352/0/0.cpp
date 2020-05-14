@@ -21,21 +21,22 @@ int main(){
   int t;
   cin >> t;
   while (t--){
-    ll n;
+    int n;
     cin >> n;
 
-    vector<ll> a(n);
-    for (auto& x : a)   cin >> x;
-    set<ll> s;
-    for (ll i = 0; i < n; ++i){
-      if (s.find((a[i] + i) % n) != s.end()){
-        cout << "NO" << endl;
-        goto done;
+    int tens = 1;
+    vi ans;
+    while (n){
+      if(n%10){
+        ans.push_back((n%10)*tens);
       }
-      s.insert((a[i] + i) % n);
+      n /= 10;
+      tens *= 10;
     }
-    cout << "YES" << endl;
-done:;
+    cout << sz(ans) << endl;
+    for (auto x : ans)
+      cout <<x << ' ';
+    cout << endl;
 
   }
 

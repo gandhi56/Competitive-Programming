@@ -24,18 +24,12 @@ int main(){
     ll n;
     cin >> n;
 
-    vector<ll> a(n);
-    for (auto& x : a)   cin >> x;
-    set<ll> s;
-    for (ll i = 0; i < n; ++i){
-      if (s.find((a[i] + i) % n) != s.end()){
-        cout << "NO" << endl;
-        goto done;
-      }
-      s.insert((a[i] + i) % n);
+    ll ans = 0;
+    ll d = 1;
+    for (ll i = 3; i <= n; i += 2){
+      ans += (i*2 + (i-2)*2)*(d++);
     }
-    cout << "YES" << endl;
-done:;
+    cout << ans << endl;
 
   }
 

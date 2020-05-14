@@ -14,28 +14,33 @@ typedef long long ll;
 typedef pair<int, int> pii;
 typedef vector<int> vi;
 
+ll countNonDivs(ll n, ll T){
+  return (T/n)*(n-1) + (T % n);
+}
 
 int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
   
   int t;
-  cin >> t;
+  cin  >> t;
   while (t--){
-    ll n;
-    cin >> n;
+    ll n, k;
+    cin >> n >> k;
 
-    vector<ll> a(n);
-    for (auto& x : a)   cin >> x;
-    set<ll> s;
-    for (ll i = 0; i < n; ++i){
-      if (s.find((a[i] + i) % n) != s.end()){
-        cout << "NO" << endl;
-        goto done;
+    ll lo = 1;
+    ll hi = n*1000000000;
+    while (lo < hi){
+      ll mid = lo + (hi - lo)/2;
+      ll divs = countNonDivs(n, mid);
+      if (divs <= k-1){
+        lo = mid + 1;
       }
-      s.insert((a[i] + i) % n);
+      else{
+        hi = mid;
+      }
     }
-    cout << "YES" << endl;
-done:;
+
+    cout << lo << endl;
 
   }
 

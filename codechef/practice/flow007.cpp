@@ -21,22 +21,13 @@ int main(){
   int t;
   cin >> t;
   while (t--){
-    ll n;
+    string n;
     cin >> n;
-
-    vector<ll> a(n);
-    for (auto& x : a)   cin >> x;
-    set<ll> s;
-    for (ll i = 0; i < n; ++i){
-      if (s.find((a[i] + i) % n) != s.end()){
-        cout << "NO" << endl;
-        goto done;
-      }
-      s.insert((a[i] + i) % n);
-    }
-    cout << "YES" << endl;
-done:;
-
+    reverse(all(n));
+    int i = 0;
+    for (i = 0; i < sz(n) and n[i] == '0'; ++i){}
+    for (; i < sz(n); ++i)  cout << n[i];
+    cout << endl;
   }
 
   return 0;

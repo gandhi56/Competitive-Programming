@@ -14,11 +14,12 @@ typedef long long ll;
 typedef pair<int, int> pii;
 typedef vector<int> vi;
 
-int n, k;
+int n, K;
 vi p, pos;
 
 void swp3(int i, int j, int k){
   int a = p[i], b = p[j], c = p[k];
+  //cout << "swapping " << a << ' ' << b << ' ' << c << endl;
   p[i] = c;
   p[j] = a;
   p[k] = b;
@@ -28,7 +29,7 @@ void swp3(int i, int j, int k){
 }
 
 void show(){
-  for (auto& x : p) cout << x << ' ';
+  for (auto& x : p) cout << x+1 << ' ';
   cout << endl;
 }
 
@@ -40,7 +41,7 @@ bool ok(){
 }
 
 void solve(){
-  cin >> n >> k;
+  cin >> n >> K;
   p.resize(0);
   p.resize(n);
   pos.resize(0);
@@ -53,47 +54,42 @@ void solve(){
     pos[p[i]] = i;
   }
 
-  int inv =0 ;
-  for (int i = 0; i < n; ++i){
-    for (int j = i+1; j < n; ++j){
-      if (p[i] > p[j])  inv++;
-    }
-  }
-  if (inv&1){
-    cout << -1 << endl;
-    return;
-  }
-
   //show();
   int cnt = 0;
   vector<tuple<int,int,int>> ans;
-  for (int i = 0; i < n; ++i){
-    if (p[i] == i)    continue;
-    int j = pos[i];
-    if (j >= n){
-      cout <<-1 << endl;
-      return;
-    }
-    if (abs(j-i) == 1){
-      swp3(i, i+1, i+2);
-      swp3(i, i+1, i+2);
-      cnt++;
-      ans.push_back(make_tuple(i, i+1, i+2));
-      ans.push_back(make_tuple(i, i+1, i+2));
+  int i =0, j, k;
+  while (1){
+    for (; i < n and p[i] == i; ++i){}
+    for (j = i+1; j < n and p[j] == j; ++j){}
+    for (k = j+1; k < n and p[k] == k; ++k){}
+
+    if (i == n){
+      // done
+      break;
     }
     else{
-      swp3(i, j-1, j);
-      ans.push_back(make_tuple(i, j-1, j));
+      if (j == n or k == n){
+        cout << -1 << endl;
+        return;
+      }
     }
-    cnt++;
-    //show();
+
+    //cout << "i = " << i << endl;
+    //cout << "j = " << j << endl;
+    //cout << "k = " << k << endl;
+
+    if (!(p[i] < p[j] and p[j] < p[k])){
+      swp3(i, j, k);
+      ans.push_back(make_tuple(i, j, k));
+    }
+
   }
 
-  if (!ok() or cnt > k){
+  if (!ok() or sz(ans) > K){
     cout << -1 << endl;
     return;
   }
-  cout << cnt << endl;
+  cout << sz(ans) << endl;
   for (auto x : ans){
     cout << get<0>(x)+1 << ' ' << get<1>(x)+1 << ' ' << get<2>(x)+1 << endl;
   }

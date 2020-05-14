@@ -21,21 +21,27 @@ int main(){
   int t;
   cin >> t;
   while (t--){
-    ll n;
-    cin >> n;
 
-    vector<ll> a(n);
-    for (auto& x : a)   cin >> x;
-    set<ll> s;
-    for (ll i = 0; i < n; ++i){
-      if (s.find((a[i] + i) % n) != s.end()){
-        cout << "NO" << endl;
-        goto done;
-      }
-      s.insert((a[i] + i) % n);
+    int n, k;
+    cin >> n >> k;
+
+    vi ans;
+    if (n - (k-1) > 0 and (n-k+1)%2 == 1){
+      cout << "YES" << endl;
+      for (int i = 0; i < k-1; ++i)
+        cout << "1 ";
+      cout << n-(k-1) << endl;
     }
-    cout << "YES" << endl;
-done:;
+    else if (n-2*(k-1) > 0 and (n-2*k+2)%2 == 0){
+      cout << "YES" << endl;
+      for (int i = 0; i < k-1; ++i)
+        cout << "2 ";
+      cout << n-2*k+2 << endl;
+    }
+    else{
+      cout << "NO" << endl;
+    }
+
 
   }
 
