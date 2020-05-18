@@ -14,43 +14,64 @@ typedef long long ll;
 typedef pair<int, int> pii;
 typedef vector<int> vi;
 
+const int maxn = 1e6+7;
+int seg[maxn*3];
+
+void add(int idx, int val, int c = 1, int l = 0, int r = maxn){
+  if (l == r-1){
+    seg[c] += val;
+    return;
+  }
+
+  int mid = (l+r)/2;
+  if (idx < mid)
+    add(idx, val, c*2, l, mid);
+  else
+    add(idx, val, c*2+1, mid, r);
+  seg[c] = seg[2*c] + seg[2*c + 1];
+}
+
+int kth(int k, int c = 1, int l = 0, int r = maxn){
+  if (l == r -1)
+    return seg[c]?l : -1;
+  int mid = (l + r)/2;
+  if (seg[2*c] >= k)
+    return kth(k, c*2, l, mid);
+  else
+    return kth(k - seg[2*c], c*2+1, mid, r);
+}
 
 int main(){
   ios_base::sync_with_stdio(0); cin.tie(0);
   
   int n, q;
   cin >> n >> q;
-
-  multiset<int> s;
-  for (int i = 0; i < n; ++i){
+  
+  for (int  i= 0; i < n; ++i){
     int x;
     cin >> x;
-    s.insert(x);
+    add(x, 1);
   }
 
-  while (q--){
+  for (int i = 0; i < q; ++i){
     int k;
     cin >> k;
-
-    if (k >= 1 and k <= n){
-      s.insert(k);
+    if (k < 0){
+      int j = kth(-k);
+      add(j, -1);
     }
     else{
-      auto it = s.begin();
-      k = -k;
-      k--;
-      for (int i = 0; i < k; ++i)
-        it++;
-      s.erase(it);
+      add(k, 1);
     }
   }
 
-  if (sz(s) == 0){
+  int ans = kth(1);
+  if (ans == -1)
     cout << 0 << endl;
-  }
-  else{
-    cout << *s.begin() << endl;
-  }
+  else
+    cout << ans << endl;
+
+
 
   return 0;
 }
