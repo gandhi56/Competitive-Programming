@@ -28,4 +28,16 @@ fn main() {
 
 	let n: i32 = next(cin).unwrap_or_default();
 	let path: String = next(cin).unwrap_or_default();
+
+	let x: u64 = (1<<(n+1));
+	let mut i: usize = x as usize;
+	let mut ans = 1u64;
+	for c in path.chars(){
+		ans <<= 1;
+		if c == 'R'{
+			ans += 1;
+		}
+	}
+	println!("{}", x - ans);
+
 }
