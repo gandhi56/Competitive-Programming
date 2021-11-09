@@ -33,11 +33,6 @@ Node* constructTree(string s, int idx){
     return node;
   }
 
-  // if (s[idx] == 'N' and isLeaf(s[idx+1])){
-  //   node->value = s[idx+1];
-  //   return node;
-  // }
-
   node->left = constructTree(s, idx+1);
   if (s[idx] != 'N')
     node->right = constructTree(s, idx+2);
