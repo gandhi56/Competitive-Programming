@@ -78,7 +78,7 @@ int main() {
     while (1) {
         read_state(s);
         if (eval(s).second) break;
-        auto [bv, bm] = best_move(s, 'x');
+        auto [bv, bm] = best_move(s, 'x', 100);
         s[bm] = 'x';
         cerr << "bv " << bv << '\n';
         print_state(s);
